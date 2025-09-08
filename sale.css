@@ -1,0 +1,155 @@
+/* Full container */
+.invoice-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  background: #9c9cda; /* Lavender */
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 5px;
+}
+
+.tab {
+  padding: 6px 12px;
+  border: 1px solid #000;
+  background: #e67272;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.tab.active {
+  background: #540606;
+}
+
+/* Top Section (Invoice Form) */
+.invoice-top {
+  display: flex;
+  justify-content: space-between;
+  background: #d8c9f8;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.form-left {
+  width: 75%;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 3px;
+}
+
+.form-row label {
+  width: 250px;
+  font-weight: bold;
+}
+
+.form-row input,
+.form-row select {
+  padding: 4px;
+  margin-right: 10px;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  font-size: 14px;
+}
+
+/* Right Box for Bill */
+.bill-box {
+  width: 22%;
+  background: #f8c8dc;
+  padding: 10px;
+  text-align: center;
+  border-radius: 4px;
+}
+
+.bill-box input {
+  width: 80%;
+  padding: 4px;
+  margin-bottom: 8px;
+}
+
+.bill-box button {
+  padding: 6px 10px;
+  background: #f09ac8;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Buttons Row */
+.button-row {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn.gray { background: #ccc; }
+.btn.blue { background: #4a90e2; color: #fff; }
+.btn.green { background: #4CAF50; color: #fff; }
+.btn.pink { background: #f09ac8; color: #fff; }
+.btn.small { font-size: 12px; padding: 4px 8px; }
+
+/* Action Bar */
+.action-bar {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  background: #dcdcdc;
+  padding: 8px;
+  gap: 10px;
+  border-radius: 4px;
+}
+
+.action-bar select {
+  padding: 4px;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+}
+
+.action-bar input[type="checkbox"] {
+  margin-right: 4px;
+}
+
+/* Footer (Grand Total) */
+.footer-bar {
+  margin-top: 8px;
+  background: #ffffcc;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: left;
+}
+
+/* Fit on one screen */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+/* Make Customer Name dropdown wider */
+select[name="customerName"], 
+#customerName {
+  width: 250px;  /* You can increase this value as needed */
+  max-width: 300px;
+  padding: 6px;
+  font-size: 14px;
+}
