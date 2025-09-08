@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="#" class="nav-link active" data-section="home">Home</a></li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link" data-section="sale">Sale ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" id="invoiceTab" class="tab-link">Sale[B2B]</a></li>
+                        <li><a href="#" class="tab-link">Sale[B2C]</a></li>
+                        <li><a href="#" class="tab-link">Credit Sale[B2C]</a></li>
+                        <li><a href="#" class="tab-link">Add Customer</a></li>
+                        <li><a href="#" class="tab-link">Delivery Challan</a></li>
+                        <li><a href="#" class="tab-link">Estimation</a></li>
+                        <li><a href="#" class="tab-link">Voucher</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link" data-section="purchase">Purchase ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="tab-link">Purchase</a></li>
+                        <li><a href="#" class="tab-link">Add Customer</a></li>
+                        <li><a href="#" class="tab-link">Credit Sale[B2C]</a></li>
+                    </ul>
+                </li>
+                
+                <li><a href="#" class="nav-link" data-section="reports">Reports</a></li>
+                <li><a href="#" class="nav-link" data-section="analysis">Analysis</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="content-section active">
+            <h1>Welcome to Business Dashboard</h1>
+            <p>Select a tab from the navigation menu to get started.</p>
+        </section>
+
+        <!-- Sale Section -->
+        <section id="sale" class="content-section">
+            <!-- Invoice and Item Tabs + Search Bar Row -->
+            <div class="tab-search-row">
+                <div class="tab-container">
+                    <button id="invoiceBtn" class="tab-button active">Invoice</button>
+                    <button id="itemBtn" class="tab-button">Items</button>
+                </div>
+                <div class="search-bar-container">
+                    <input type="text" id="invoiceSearchInput" class="search-input" placeholder="Search Invoice No...">
+                    <button id="openInvoiceBtn" class="open-invoice-btn">Open</button>
+                </div>
+            </div>
+
+            <!-- Invoice Section -->
+            <div class="invoice-section active">
+                <h2>Create Invoice</h2>
+                <div class="form-row">
+                    <label>Select Route</label>
+                         <select id="routeSelect">
+                            <option value="">Select Route</option>
+                            <option value="Route 1">Route 1</option>
+                            <option value="Route 2">Route 2</option>
+                            <option value="Route 3">Route 3</option>
+                        </select>
+                    <label>GST IN:</label>
+                    <input type="text" placeholder="GST number">
+                </div>
+                <div class="form-row">
+                        <label>Select Customer</label>
+    <select id="customerSelect">
+        <option value="">Select Customer</option>
+        <option value="Customer 1">Customer 1</option>
+        <option value="Customer 2">Customer 2</option>
+        <option value="Customer 3">Customer 3</option>
+    </select>
+                </div>
+                <div class="form-row">
+                    <label>Invoice No:</label>
+                    <input type="text" placeholder="Enter invoice number">
+                    <label>Invoice Date:</label>
+                    <input type="date" placeholder="Date">
+                </div>
+                <div class="form-row">
+                    <label>Order No:</label>
+                    <input type="text" placeholder="Enter order number">
+                    <label>Order Date:</label>
+                    <input type="date" placeholder="Date">
+                </div>
+                <div class="form-row">
+                    <label>Place of Supply:</label>
+                    <input type="text" placeholder="Enter place of supply">
+                </div>
+                <div class="form-row form-row-btn-right">
+                    <button id="createInvoiceBtn" class="create-invoice-btn">Create Invoice</button>
+                </div>
+                 <div id="grandTotalTabDisplay" class="grand-total-tab" style="display:none; margin: 20px 0 10px 0; font-weight:bold; color:#333;">Grand Total: ₹ <span id="grandTotalTab">0.00</span>
+                </div>
+                <div id="invoiceItemsTableContainer" style="display:none; margin-bottom: 10px;">
+                    <table class="invoice-items-table" style="width:100%; border-collapse:collapse;">
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Barcode</th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                                <th>Discount</th>
+                                <th>SGST</th>
+                                <th>CGST</th>
+                                <th>CESS</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoiceItemsTableBody"></tbody>
+                    </table>
+               </div>
+                
+            </div>
+
+            <!-- Item Section -->
+            <div class="item-section">
+                <h2>Add Items</h2>
+                <div class="item-form-row-flex">
+                    <div class="item-form-fields-box">
+                        <div class="item-form-row">
+                            <input type="text" id="hsnCode" placeholder="HSN Code">
+                            <input type="number" id="gst" placeholder="GST %">
+                            <input type="number" id="cess" placeholder="CESS %"> 
+                        </div>
+                        <div class="item-form-row">
+                            <input type="text" id="itemName" placeholder="Item Name" style="width: 100%; min-width: 250px;">
+                        </div>
+                        <div class="item-form-row" id="itemExtraFields">
+                            <input type="text" id="barcode" placeholder="Barcode">
+                            <input type="number" id="salePrice" placeholder="Sale Price">
+                            <input type="number" id="oldMrp" placeholder="MRP">
+                            <input type="number" id="rateBeforeGst" placeholder="Rate Before GST">
+                            <input type="number" id="quantity" placeholder="Quantity" value="1">
+                            <input type="number" id="discount" placeholder="Discount %">
+                        </div>
+                        <div class="item-form-row form-row-btn-right">
+                            <button id="addItemBtn" class="add-item-btn">Add</button>
+                        </div>
+                        
+                    </div>
+                <h3>Grand Total: ₹ <span id="grandTotal">0.00</span></h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                                <th>Barcode</th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                                <th>Discount</th>
+                                <th>SGST</th>
+                                <th>CGST</th>
+                                <th>CESS</th>
+                                <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemTableBody"></tbody>
+                </table>
+
+                
+            </div>
+        </section>
+
+        <!-- Purchase Section -->
+        <section id="purchase" class="content-section">
+            <h2>Purchase Section</h2>
+            <p>Manage your purchases here.</p>
+        </section>
+
+        <!-- Reports Section -->
+        <section id="reports" class="content-section">
+            <h2>Reports</h2>
+            <p>View business reports here.</p>
+        </section>
+
+        <!-- Analysis Section -->
+        <section id="analysis" class="content-section">
+            <h2>Analysis</h2>
+            <p>Analyze your business performance.</p>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
