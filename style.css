@@ -1,3 +1,98 @@
+/* Responsive improvements for item tab and tables */
+@media (max-width: 900px) {
+    .item-section.active, .invoice-section.active {
+        width: 100%;
+        padding: 0 2vw;
+    }
+    .item-form-row, #itemExtraFields {
+        flex-direction: column !important;
+        gap: 6px !important;
+        align-items: stretch !important;
+    }
+    .item-form-fields-box {
+        padding: 6px 0 0 0;
+    }
+    .item-section input, .item-section select {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+    .action-bar {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
+}
+
+@media (max-width: 700px) {
+    .content-section.active {
+        padding: 1vw 1vw 1vw 1vw;
+    }
+    .item-section h2 {
+        font-size: 1.1rem;
+    }
+    .item-form-row, #itemExtraFields {
+        flex-direction: column !important;
+        gap: 4px !important;
+        align-items: stretch !important;
+    }
+    .item-section input, .item-section select {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        font-size: 1rem;
+    }
+    .action-bar {
+        flex-direction: column;
+        gap: 6px;
+        align-items: stretch;
+    }
+    table {
+        display: block;
+        overflow-x: auto;
+        width: 100%;
+    }
+    table thead, table tbody, table tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+    table th, table td {
+        font-size: 13px;
+        padding: 6px 4px;
+        min-width: 80px;
+    }
+}
+/* Action Bar Styles */
+.action-bar {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
+    margin: 10px 0 10px 0;
+    flex-wrap: wrap;
+}
+.action-btn {
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.action-btn:hover {
+    background: #0d47a1;
+}
+.action-select {
+    padding: 8px 12px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    font-size: 15px;
+    background: #fff;
+    color: #222;
+}
 #invoice-section input[type="text"],
 #invoice-section input[type="date"],
 #invoice-section select {
@@ -276,6 +371,9 @@ body {
 .invoice-section.active,
 .item-section.active {
     display: block;
+    width: 75%;
+    margin-top: 10px;
+    gap: 10px;
 }
 
 /* Form Styles */
@@ -329,10 +427,11 @@ body {
 .add-item-btn {
     background: green;
     color: white;
-    padding: 10px;
+    padding: 10px 18px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 16px;
 }
 
 .add-item-btn:hover {
