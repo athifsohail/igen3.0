@@ -63,6 +63,37 @@
         min-width: 80px;
     }
 }
+/* Edit/Delete Buttons in Item Table */
+.edit-item-btn, .delete-item-btn {
+    padding: 4px 8px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-size: 13px;
+    margin: 0 2px;
+}
+.edit-item-btn {
+    background-color: #1976d2; /* Blue */
+}
+.edit-item-btn:hover {
+    background-color: #0d47a1;
+}
+.delete-item-btn {
+    background-color: #d32f2f; /* Red */
+}
+.delete-item-btn:hover {
+    background-color: #b71c1c;
+}
+.edit-item-btn img, .delete-item-btn img {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+
+.actions-column {
+    width: 120px; /* Give enough space for buttons */
+}
 /* Action Bar Styles */
 .action-bar {
     display: flex;
@@ -102,7 +133,7 @@
     background: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
-    padding: 8px 10px;
+    padding: 8px 4px;
     font-size: 1rem;
     margin-bottom: 6px;
 }
@@ -111,23 +142,25 @@
 #item-section select,
 #item-section textarea.big-white-field {
     width: 180px;
-    background: #fff;
+    background: #da2424;
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 8px 12px;
     font-size: 1rem;
     margin-bottom: 8px;
 }
-#customerSelect, #customerSelectItems {
-    width: 320px;
+#customerSelect, #customerSelectItems,
+#routeSelect {
+    width: 240px;
     min-width: 220px;
     max-width: 100%;
-    background: #fff;
+    background: #fff;   
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 8px 10px;
     font-size: 1rem;
     margin-left: 8px;
+    margin-top: 0%;
 }
 .sale-price-wrap {
     display: flex;
@@ -150,6 +183,7 @@
 }
 .item-form-fields-box {
     background: #fff;
+    background: transparent;
     border-radius: 8px;
     box-shadow: none;
     padding: 10px 0 0 0;
@@ -196,6 +230,30 @@
 .invoice-items-table th {
     background: #f4f4f4;
 }
+
+/* New containers for item section layout */
+.item-entry-container, .item-display-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.item-entry-container {
+    position: -webkit-sticky; /* For Safari */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    margin-bottom: 20px;
+    margin-bottom: 15px;
+}
+
+.item-display-container {
+    display: flex;
+    flex-direction: column;
+}
+
+
 /* General Reset */
 * {
     margin: 0;
@@ -225,6 +283,11 @@ body {
     padding: 0;
     margin: 0;
 }
+
+.navbar .nav-item-right {
+    margin-left: auto; /* Pushes this item to the right */
+}
+
 
 .navbar li {
     position: relative;
@@ -286,13 +349,6 @@ body {
     align-items: center;
     margin-bottom: 20px;
 }
-.tab-container {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-}
 .search-bar-container {
     display: flex;
     align-items: center;
@@ -303,10 +359,11 @@ body {
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 1rem;
-    width: 180px;
+    width: 240px;
+    
 }
 .open-invoice-btn {
-    padding: 8px 16px;
+    padding: 8px 18px;
     background: #333;
     color: #fff;
     border: none;
@@ -316,36 +373,59 @@ body {
     transition: background 0.2s;
 }
 .open-invoice-btn:hover {
-    background: #555;
+    background: #0f538f;
 }
+/* Global Search Container */
+.global-search-container {
+    position: fixed;
+    top: 85px; /* Below the navbar */
+    left: 1325px; 
+    right: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 8px;
+    z-index: 999;
+    width: auto;
+    display: none; /* Hidden by default */
+}
+
 
 .content-section.active {
         display: block;
-        background: white;
-        margin: 20px 20px 20px 20px;
-        max-width: 1400px;
-        width: 95vw;
-        min-width: 0;
+        margin: 20px auto; /* Center the section with top/bottom margin */
+        background: rgb(243, 225, 218);
+        width: 95%; /* Use a percentage for better flexibility */
+        max-width: 1600px; /* Increase max-width for larger screens */
         border-radius: 8px;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-        padding: 2vw 3vw 2vw 3vw;
-        box-sizing: content-box;
+        padding: 20px 30px; /* Use fixed padding for consistency */
+        box-sizing: border-box; /* Better for layout calculations */
 }
 
 @media (max-width: 700px) {
     .content-section.active {
-        max-width: 100vw;
-        width: 100vw;
-        padding: 2vw 2vw 2vw 2vw;
+        width: 100%;
+        margin: 0;
+        padding: 15px;
         border-radius: 0;
     }
+}
+
+/* Reduce top margin for main section headings */
+.content-section > h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
 }
 
 /* Tab Buttons inside Sale Section */
 .tab-container {
     width: 320px;
     display: flex;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .tab-button {
@@ -370,10 +450,23 @@ body {
 
 .invoice-section.active,
 .item-section.active {
-    display: block;
-    width: 75%;
-    margin-top: 10px;
+    /* Use flex to allow sticky positioning to work correctly */
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 0;
     gap: 10px;
+}
+/* Override for invoice section to behave as before */
+.invoice-section.active {
+    display: block;
+    height: auto;
+}
+
+/* Make the table container scrollable */
+.table-scroll-container {
+    overflow-y: auto; /* Adds a scrollbar when content overflows */
+    /* overflow-y: auto; */ /* Removed to allow natural page scroll */
 }
 
 /* Form Styles */
@@ -395,6 +488,9 @@ body {
     border-radius: 4px;
 }
 
+.form-row input, .form-row select {
+    font-size: 15px; /* Increased font size */
+}
 .create-invoice-btn {
     background: #007bff;
     color: white;
