@@ -1,3 +1,681 @@
+    <!-- Sale[B2C] Section -->
+    <section id="sale-b2c" class="content-section">
+        <div class="tab-search-row">
+            <div class="tab-container">
+                <button id="invoiceBtnB2C" class="tab-button active">Invoice</button>
+                <button id="itemBtnB2C" class="tab-button">Items</button>
+            </div>
+            <div class="search-bar-container">
+                <input type="text" id="invoiceSearchInputB2C" class="search-input" placeholder="Search Invoice No...">
+                <button id="openInvoiceBtnB2C" class="open-invoice-btn">Open</button>
+            </div>
+        </div>
+        <div class="invoice-section active">
+            <h2>Create Invoice (B2C)</h2>
+            <div class="form-row">
+                <label>Select Route</label>
+                <select id="routeSelectB2C">
+                    <option value="">Select Route</option>
+                    <option value="Route 1">Route 1</option>
+                    <option value="Route 2">Route 2</option>
+                    <option value="Route 3">Route 3</option>
+                </select>
+                <label>GST IN:</label>
+                <input type="text" placeholder="GST number">
+            </div>
+            <div class="form-row">
+                <label>Select Customer</label>
+                <select id="customerSelectB2C">
+                    <option value="">Select Customer</option>
+                    <option value="Customer 1">Customer 1</option>
+                    <option value="Customer 2">Customer 2</option>
+                    <option value="Customer 3">Customer 3</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label>Invoice No:</label>
+                <input type="text" placeholder="Enter invoice number">
+                <label>Invoice Date:</label>
+                <input type="date" placeholder="Date">
+            </div>
+            <div class="form-row">
+                <label>Order No:</label>
+                <input type="text" placeholder="Enter order number">
+                <label>Order Date:</label>
+                <input type="date" placeholder="Date">
+            </div>
+            <div class="form-row">
+                <label>Place of Supply:</label>
+                <input type="text" value="Local">
+                <label>Address:</label>
+                <input type="text" placeholder="Enter Address">
+            </div>
+            <div class="form-row form-row-btn-right">
+                <button id="createInvoiceBtnB2C" class="create-invoice-btn">Create Invoice</button>
+            </div>
+            <div id="grandTotalTabDisplayB2C" class="grand-total-tab" style="display:none; margin: 20px 0 10px 0; font-weight:bold; color:#333;">Grand Total: ₹ <span id="grandTotalTabB2C">0.00</span>
+            </div>
+            <div class="action-bar" style="display: flex; gap: 10px; align-items: right; margin-bottom: 10px;">
+                <button id="whatsappBtnB2C" class="action-btn">WhatsApp</button>
+                <button id="duplicateBtnB2C" class="action-btn">Duplicate</button>
+                <button id="triplicateBtnB2C" class="action-btn">Triplicate</button>
+                <button id="printBtnB2C" class="action-btn">Print</button>
+                <select id="paperSelectB2C" class="action-select">
+                    <option value="">Select Paper</option>
+                    <option value="A4P">A4P</option>
+                    <option value="A4L">A4L</option>
+                    <option value="A5P">A5P</option>
+                    <option value="A5L">A5L</option>
+                </select>
+                <select id="printerSelectB2C" class="action-select">
+                    <option value="default">Default Printer</option>
+                    <option value="pdf">PDF</option>
+                    <option value="excel">EXCEL</option>
+                </select>
+            </div>
+            <div id="invoiceItemsTableContainerB2C" style="display:none; margin-bottom: 10px;">
+                <table class="invoice-items-table" style="width:100%; border-collapse:collapse;">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Barcode</th>
+                            <th>Qty</th>
+                            <th>Sale Amount</th>
+                            <th>Taxable Value</th>
+                            <th>Discount</th>
+                            <th>SGST</th>
+                            <th>CGST</th>
+                            <th>CESS</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="item-section">
+            <h2>Add Items (B2C)</h2>
+            <div class="item-form-row-flex">
+                <div class="item-form-fields-box">
+                    <div class="item-form-row">
+                        <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                            <label for="hsnCodeB2C" style="font-size:13px; margin-bottom:2px; font-weight:600;">HSN Code</label>
+                            <input type="text" id="hsnCodeB2C" placeholder="HSN Code">
+                        </div>
+                        <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                            <label for="gstB2C" style="font-size:13px; margin-bottom:2px; font-weight:600;">GST %</label>
+                            <input type="number" id="gstB2C" placeholder="GST %">
+                        </div>
+                        <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                            <label for="cessB2C" style="font-size:13px; margin-bottom:2px; font-weight:600;">CESS %</label>
+                            <input type="number" id="cessB2C" placeholder="CESS %"> 
+                        </div>
+                    </div>
+                    <div class="item-form-row">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
+                            <div style="display:flex; flex-direction:column; align-items:flex-start; margin-right:10px;">
+                                <label for="oldMrpTopB2C" style="font-size:13px; margin-bottom:2px; font-weight:600;">Old MRP</label>
+                                <input type="number" id="oldMrpTopB2C" placeholder="Old MRP" style="width: 120px;">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start; flex:1;">
+                                <label for="itemNameB2C" style="font-size:13px; margin-bottom:2px; font-weight:600;">Item Name</label>
+                                <input type="text" id="itemNameB2C" placeholder="Item Name" style="width:100%; min-width: 250px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-form-row" id="itemExtraFieldsB2C">
+                        <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                            <label for="barcodeB2C" style="font-size:13px; margin-bottom:2px; font-weight:600;">Barcode</label>
+                            <input type="text" id="barcodeB2C" placeholder="Barcode">
+                        </div>
+                        <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                            <input type="checkbox" id="perPieceCheckboxB2C" style="width:18px; height:18px; margin-right:4px;">
+                            <label for="perPieceCheckboxB2C" style="font-size:13px; user-select:none;">Per Piece Price</label>
+                        </div>
+                        <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                            <label for="salePriceB2C" style="font-size:13px; margin-bottom:2px; font-weight:600;">Sale Price</label>
+                            <input type="number" id="salePriceB2C" placeholder="Sale Price">
+                        </div>
+                        <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                            <label for="oldMrpB2C" style="font-size:13px; margin-bottom:2px; font-weight:600;">MRP</label>
+                            <input type="number" id="oldMrpB2C" placeholder="MRP">
+                        </div>
+                        <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                            <label for="rateBeforeGstB2C" style="font-size:13px; margin-bottom:2px; font-weight:600;">Rate Before GST</label>
+                            <input type="number" id="rateBeforeGstB2C" placeholder="Rate Before GST">
+                        </div>
+                        <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                            <label for="quantityB2C" style="font-size:13px; margin-bottom:2px; font-weight:600;">Quantity</label>
+                            <input type="number" id="quantityB2C" placeholder="Quantity" value="1">
+                        </div>
+                        <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                            <label for="discountB2C" style="font-size:13px; margin-bottom:2px; font-weight:600;">Discount</label>
+                            <input type="number" id="discountB2C" placeholder="Discount" value="0" style="width:100%;">
+                        </div>
+                    </div>
+                    <div class="item-form-row form-row-btn-right">
+                        <button id="addItemBtnB2C" class="add-item-btn">Add</button>
+                    </div>
+                </div>
+                <h3>Grand Total: ₹ <span id="grandTotalB2C">0.00</span></h3>
+                <div class="action-bar" style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+                    <button id="whatsappBtnItemsB2C" class="action-btn">WhatsApp</button>
+                    <button id="duplicateBtnItemsB2C" class="action-btn">Duplicate</button>
+                    <button id="triplicateBtnItemsB2C" class="action-btn">Triplicate</button>
+                    <button id="printBtnItemsB2C" class="action-btn">Print</button>
+                    <select id="paperSelectItemsB2C" class="action-select">
+                        <option value="">Select Paper</option>
+                        <option value="A4P">A4P</option>
+                        <option value="A4L">A4L</option>
+                        <option value="A5P">A5P</option>
+                        <option value="A5L">A5L</option>
+                    </select>
+                    <select id="printerSelectItemsB2C" class="action-select">
+                        <option value="default">Default Printer</option>
+                        <option value="pdf">PDF</option>
+                        <option value="excel">EXCEL</option>
+                    </select>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Barcode</th>
+                            <th>Qty</th>
+                            <th>Sale Amount</th>
+                            <th>Taxable Value</th>
+                            <th>Discount</th>
+                            <th>SGST</th>
+                            <th>CGST</th>
+                            <th>CESS</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemTableBodyB2C"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Credit Sale[B2C] Section -->
+    <section id="credit-sale-b2c" class="content-section">
+            <div class="tab-search-row">
+                <div class="tab-container">
+                    <button class="tab-button active">Invoice</button>
+                    <button class="tab-button">Items</button>
+                </div>
+                <div class="search-bar-container">
+                    <input type="text" class="search-input" placeholder="Search Invoice No...">
+                    <button class="open-invoice-btn">Open</button>
+                </div>
+            </div>
+            <div class="invoice-section active">
+                <h2>Create Credit Sale Invoice (B2C)</h2>
+                <div class="form-row">
+                    <label>Select Route</label>
+                    <select id="routeSelectCreditB2C">
+                        <option value="">Select Route</option>
+                        <option value="Route 1">Route 1</option>
+                        <option value="Route 2">Route 2</option>
+                        <option value="Route 3">Route 3</option>
+                    </select>
+                    <label>GST IN:</label>
+                    <input type="text" placeholder="GST number">
+                </div>
+                <div class="form-row">
+                    <label>Select Customer</label>
+                    <select id="customerSelectCreditB2C">
+                        <option value="">Select Customer</option>
+                        <option value="Customer 1">Customer 1</option>
+                        <option value="Customer 2">Customer 2</option>
+                        <option value="Customer 3">Customer 3</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Invoice No:</label>
+                    <input type="text" placeholder="Enter invoice number">
+                    <label>Invoice Date:</label>
+                    <input type="date" placeholder="Date">
+                </div>
+                <div class="form-row">
+                    <label>Order No:</label>
+                    <input type="text" placeholder="Enter order number">
+                    <label>Order Date:</label>
+                    <input type="date" placeholder="Date">
+                </div>
+                <div class="form-row">
+                    <label>Place of Supply:</label>
+                    <input type="text" value="Local">
+                    <label>Address:</label>
+                    <input type="text" placeholder="Enter Address">
+                </div>
+                <div class="form-row form-row-btn-right">
+                    <button class="create-invoice-btn">Create Invoice</button>
+                </div>
+                <div class="grand-total-tab" style="display:none; margin: 20px 0 10px 0; font-weight:bold; color:#333;">Grand Total: ₹ <span>0.00</span>
+                </div>
+                <div class="action-bar" style="display: flex; gap: 10px; align-items: right; margin-bottom: 10px;">
+                    <button class="action-btn">WhatsApp</button>
+                    <button class="action-btn">Duplicate</button>
+                    <button class="action-btn">Triplicate</button>
+                    <button class="action-btn">Print</button>
+                    <select class="action-select">
+                        <option value="">Select Paper</option>
+                        <option value="A4P">A4P</option>
+                        <option value="A4L">A4L</option>
+                        <option value="A5P">A5P</option>
+                        <option value="A5L">A5L</option>
+                    </select>
+                    <select class="action-select">
+                        <option value="default">Default Printer</option>
+                        <option value="pdf">PDF</option>
+                        <option value="excel">EXCEL</option>
+                    </select>
+                </div>
+                <div style="display:none; margin-bottom: 10px;">
+                    <table class="invoice-items-table" style="width:100%; border-collapse:collapse;">
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Barcode</th>
+                                <th>Qty</th>
+                                <th>Sale Amount</th>
+                                <th>Taxable Value</th>
+                                <th>Discount</th>
+                                <th>SGST</th>
+                                <th>CGST</th>
+                                <th>CESS</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="item-section">
+                <h2>Add Items (Credit Sale B2C)</h2>
+                <div class="item-form-row-flex">
+                    <div class="item-form-fields-box">
+                        <div class="item-form-row">
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">HSN Code</label>
+                                <input type="text" placeholder="HSN Code">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">GST %</label>
+                                <input type="number" placeholder="GST %">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">CESS %</label>
+                                <input type="number" placeholder="CESS %"> 
+                            </div>
+                        </div>
+                        <div class="item-form-row">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
+                                <div style="display:flex; flex-direction:column; align-items:flex-start; margin-right:10px;">
+                                    <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Old MRP</label>
+                                    <input type="number" placeholder="Old MRP" style="width: 120px;">
+                                </div>
+                                <div style="display:flex; flex-direction:column; align-items:flex-start; flex:1;">
+                                    <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Item Name</label>
+                                    <input type="text" placeholder="Item Name" style="width:100%; min-width: 250px;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item-form-row">
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Barcode</label>
+                                <input type="text" placeholder="Barcode">
+                            </div>
+                            <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                                <input type="checkbox" style="width:18px; height:18px; margin-right:4px;">
+                                <label style="font-size:13px; user-select:none;">Per Piece Price</label>
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Sale Price</label>
+                                <input type="number" placeholder="Sale Price">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">MRP</label>
+                                <input type="number" placeholder="MRP">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Rate Before GST</label>
+                                <input type="number" placeholder="Rate Before GST">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Quantity</label>
+                                <input type="number" placeholder="Quantity">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Discount</label>
+                                <input type="number" placeholder="Discount">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Delivery Challan Section -->
+    <section id="delivery-challan" class="content-section">
+            <div class="tab-search-row">
+                <div class="tab-container">
+                    <button class="tab-button active">Invoice</button>
+                    <button class="tab-button">Items</button>
+                </div>
+                <div class="search-bar-container">
+                    <input type="text" class="search-input" placeholder="Search Invoice No...">
+                    <button class="open-invoice-btn">Open</button>
+                </div>
+            </div>
+            <div class="invoice-section active">
+                <h2>Create Delivery Challan</h2>
+                <div class="form-row">
+                    <label>Select Route</label>
+                    <select id="routeSelectDelivery">
+                        <option value="">Select Route</option>
+                        <option value="Route 1">Route 1</option>
+                        <option value="Route 2">Route 2</option>
+                        <option value="Route 3">Route 3</option>
+                    </select>
+                    <label>GST IN:</label>
+                    <input type="text" placeholder="GST number">
+                </div>
+                <div class="form-row">
+                    <label>Select Customer</label>
+                    <select id="customerSelectDelivery">
+                        <option value="">Select Customer</option>
+                        <option value="Customer 1">Customer 1</option>
+                        <option value="Customer 2">Customer 2</option>
+                        <option value="Customer 3">Customer 3</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Invoice No:</label>
+                    <input type="text" placeholder="Enter invoice number">
+                    <label>Invoice Date:</label>
+                    <input type="date" placeholder="Date">
+                </div>
+                <div class="form-row">
+                    <label>Order No:</label>
+                    <input type="text" placeholder="Enter order number">
+                    <label>Order Date:</label>
+                    <input type="date" placeholder="Date">
+                </div>
+                <div class="form-row">
+                    <label>Place of Supply:</label>
+                    <input type="text" value="Local">
+                    <label>Address:</label>
+                    <input type="text" placeholder="Enter Address">
+                </div>
+                <div class="form-row form-row-btn-right">
+                    <button class="create-invoice-btn">Create Invoice</button>
+                </div>
+                <div class="grand-total-tab" style="display:none; margin: 20px 0 10px 0; font-weight:bold; color:#333;">Grand Total: ₹ <span>0.00</span>
+                </div>
+                <div class="action-bar" style="display: flex; gap: 10px; align-items: right; margin-bottom: 10px;">
+                    <button class="action-btn">WhatsApp</button>
+                    <button class="action-btn">Duplicate</button>
+                    <button class="action-btn">Triplicate</button>
+                    <button class="action-btn">Print</button>
+                    <select class="action-select">
+                        <option value="">Select Paper</option>
+                        <option value="A4P">A4P</option>
+                        <option value="A4L">A4L</option>
+                        <option value="A5P">A5P</option>
+                        <option value="A5L">A5L</option>
+                    </select>
+                    <select class="action-select">
+                        <option value="default">Default Printer</option>
+                        <option value="pdf">PDF</option>
+                        <option value="excel">EXCEL</option>
+                    </select>
+                </div>
+                <div style="display:none; margin-bottom: 10px;">
+                    <table class="invoice-items-table" style="width:100%; border-collapse:collapse;">
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Barcode</th>
+                                <th>Qty</th>
+                                <th>Sale Amount</th>
+                                <th>Taxable Value</th>
+                                <th>Discount</th>
+                                <th>SGST</th>
+                                <th>CGST</th>
+                                <th>CESS</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="item-section">
+                <h2>Add Items (Delivery Challan)</h2>
+                <div class="item-form-row-flex">
+                    <div class="item-form-fields-box">
+                        <div class="item-form-row">
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">HSN Code</label>
+                                <input type="text" placeholder="HSN Code">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">GST %</label>
+                                <input type="number" placeholder="GST %">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">CESS %</label>
+                                <input type="number" placeholder="CESS %"> 
+                            </div>
+                        </div>
+                        <div class="item-form-row">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
+                                <div style="display:flex; flex-direction:column; align-items:flex-start; margin-right:10px;">
+                                    <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Old MRP</label>
+                                    <input type="number" placeholder="Old MRP" style="width: 120px;">
+                                </div>
+                                <div style="display:flex; flex-direction:column; align-items:flex-start; flex:1;">
+                                    <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Item Name</label>
+                                    <input type="text" placeholder="Item Name" style="width:100%; min-width: 250px;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item-form-row">
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Barcode</label>
+                                <input type="text" placeholder="Barcode">
+                            </div>
+                            <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                                <input type="checkbox" style="width:18px; height:18px; margin-right:4px;">
+                                <label style="font-size:13px; user-select:none;">Per Piece Price</label>
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Sale Price</label>
+                                <input type="number" placeholder="Sale Price">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">MRP</label>
+                                <input type="number" placeholder="MRP">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Rate Before GST</label>
+                                <input type="number" placeholder="Rate Before GST">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Quantity</label>
+                                <input type="number" placeholder="Quantity">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Discount</label>
+                                <input type="number" placeholder="Discount">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Estimation Section -->
+    <section id="estimation" class="content-section">
+            <div class="tab-search-row">
+                <div class="tab-container">
+                    <button class="tab-button active">Invoice</button>
+                    <button class="tab-button">Items</button>
+                </div>
+                <div class="search-bar-container">
+                    <input type="text" class="search-input" placeholder="Search Invoice No...">
+                    <button class="open-invoice-btn">Open</button>
+                </div>
+            </div>
+            <div class="invoice-section active">
+                <h2>Create Estimation</h2>
+                <div class="form-row">
+                    <label>Select Route</label>
+                    <select id="routeSelectEstimation">
+                        <option value="">Select Route</option>
+                        <option value="Route 1">Route 1</option>
+                        <option value="Route 2">Route 2</option>
+                        <option value="Route 3">Route 3</option>
+                    </select>
+                    <label>GST IN:</label>
+                    <input type="text" placeholder="GST number">
+                </div>
+                <div class="form-row">
+                    <label>Select Customer</label>
+                    <select id="customerSelectEstimation">
+                        <option value="">Select Customer</option>
+                        <option value="Customer 1">Customer 1</option>
+                        <option value="Customer 2">Customer 2</option>
+                        <option value="Customer 3">Customer 3</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Invoice No:</label>
+                    <input type="text" placeholder="Enter invoice number">
+                    <label>Invoice Date:</label>
+                    <input type="date" placeholder="Date">
+                </div>
+                <div class="form-row">
+                    <label>Order No:</label>
+                    <input type="text" placeholder="Enter order number">
+                    <label>Order Date:</label>
+                    <input type="date" placeholder="Date">
+                </div>
+                <div class="form-row">
+                    <label>Place of Supply:</label>
+                    <input type="text" value="Local">
+                    <label>Address:</label>
+                    <input type="text" placeholder="Enter Address">
+                </div>
+                <div class="form-row form-row-btn-right">
+                    <button class="create-invoice-btn">Create Invoice</button>
+                </div>
+                <div class="grand-total-tab" style="display:none; margin: 20px 0 10px 0; font-weight:bold; color:#333;">Grand Total: ₹ <span>0.00</span>
+                </div>
+                <div class="action-bar" style="display: flex; gap: 10px; align-items: right; margin-bottom: 10px;">
+                    <button class="action-btn">WhatsApp</button>
+                    <button class="action-btn">Duplicate</button>
+                    <button class="action-btn">Triplicate</button>
+                    <button class="action-btn">Print</button>
+                    <select class="action-select">
+                        <option value="">Select Paper</option>
+                        <option value="A4P">A4P</option>
+                        <option value="A4L">A4L</option>
+                        <option value="A5P">A5P</option>
+                        <option value="A5L">A5L</option>
+                    </select>
+                    <select class="action-select">
+                        <option value="default">Default Printer</option>
+                        <option value="pdf">PDF</option>
+                        <option value="excel">EXCEL</option>
+                    </select>
+                </div>
+                <div style="display:none; margin-bottom: 10px;">
+                    <table class="invoice-items-table" style="width:100%; border-collapse:collapse;">
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Barcode</th>
+                                <th>Qty</th>
+                                <th>Sale Amount</th>
+                                <th>Taxable Value</th>
+                                <th>Discount</th>
+                                <th>SGST</th>
+                                <th>CGST</th>
+                                <th>CESS</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="item-section">
+                <h2>Add Items (Estimation)</h2>
+                <div class="item-form-row-flex">
+                    <div class="item-form-fields-box">
+                        <div class="item-form-row">
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">HSN Code</label>
+                                <input type="text" placeholder="HSN Code">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">GST %</label>
+                                <input type="number" placeholder="GST %">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">CESS %</label>
+                                <input type="number" placeholder="CESS %"> 
+                            </div>
+                        </div>
+                        <div class="item-form-row">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
+                                <div style="display:flex; flex-direction:column; align-items:flex-start; margin-right:10px;">
+                                    <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Old MRP</label>
+                                    <input type="number" placeholder="Old MRP" style="width: 120px;">
+                                </div>
+                                <div style="display:flex; flex-direction:column; align-items:flex-start; flex:1;">
+                                    <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Item Name</label>
+                                    <input type="text" placeholder="Item Name" style="width:100%; min-width: 250px;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item-form-row">
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Barcode</label>
+                                <input type="text" placeholder="Barcode">
+                            </div>
+                            <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                                <input type="checkbox" style="width:18px; height:18px; margin-right:4px;">
+                                <label style="font-size:13px; user-select:none;">Per Piece Price</label>
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Sale Price</label>
+                                <input type="number" placeholder="Sale Price">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">MRP</label>
+                                <input type="number" placeholder="MRP">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Rate Before GST</label>
+                                <input type="number" placeholder="Rate Before GST">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Quantity</label>
+                                <input type="number" placeholder="Quantity">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label style="font-size:13px; margin-bottom:2px; font-weight:600;">Discount</label>
+                                <input type="number" placeholder="Discount">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,9 +693,9 @@
                 <li class="dropdown">
                     <a href="#" class="nav-link" data-section="sale">Sale ▼</a>
                     <ul class="dropdown-menu">
-                        <li><a href="#" id="invoiceTab" class="tab-link">Sale[B2B]</a></li>
-                        <li><a href="#" class="tab-link">Sale[B2C]</a></li>
-                        <li><a href="#" class="tab-link">Credit Sale[B2C]</a></li>
+                        <li><a href="#" id="invoiceTab" class="tab-link">Sale[B2B] [F1]</a></li>
+                        <li><a href="#" class="tab-link">Sale[B2C] [F2]</a></li>
+                        <li><a href="#" class="tab-link">Credit Sale[B2C] [F3]</a></li>
                         <li><a href="#" class="tab-link">Add Customer</a></li>
                         <li><a href="#" class="tab-link">Delivery Challan</a></li>
                         <li><a href="#" class="tab-link">Estimation</a></li>
@@ -27,14 +705,71 @@
                 <li class="dropdown">
                     <a href="#" class="nav-link" data-section="purchase">Purchase ▼</a>
                     <ul class="dropdown-menu">
-                        <li><a href="#" class="tab-link">Purchase</a></li>
+                        <li><a href="#" class="tab-link">Purchase[F9]</a></li>
                         <li><a href="#" class="tab-link">Add Customer</a></li>
-                        <li><a href="#" class="tab-link">Credit Sale[B2C]</a></li>
+                        <li><a href="#" class="tab-link">E-bill</a></li>
                     </ul>
                 </li>
-                
-                <li><a href="#" class="nav-link" data-section="reports">Reports</a></li>
-                <li><a href="#" class="nav-link" data-section="analysis">Analysis</a></li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link" data-section="stock">Stock ▼</a>
+                <ul class="dropdown-menu">
+                        <li><a href="#" class="tab-link">Add[F7]</a></li>
+                        <li><a href="#" class="tab-link">Balance</a></li>
+                        <li><a href="#" class="tab-link">Search[F8]</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link" data-section="stock">Reports ▼</a>
+                <ul class="dropdown-menu">
+                        <li><a href="#" class="tab-link">Sale Report[F10]</a></li>
+                        <li><a href="#" class="tab-link">Purchase Report[F11]</a></li>
+                        <li><a href="#" class="tab-link">Sale Today</a></li>
+                        <li><a href="#" class="tab-link">Sale Month</a></li>
+                        <li><a href="#" class="tab-link">Taxwise Report</a></li>
+                        <li><a href="#" class="tab-link">Profit and Loss</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link" data-section="stock">Analysis ▼</a>
+                <ul class="dropdown-menu">
+                        <li><a href="#" class="tab-link">Sales and Purchase</a></li>
+                        <li><a href="#" class="tab-link">Expenditure</a></li>
+                        <li><a href="#" class="tab-link">Item wise</a></li>
+                        <li><a href="#" class="tab-link">Customer wise</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link" data-section="stock">Returns ▼</a>
+                <ul class="dropdown-menu">
+                        <li><a href="#" class="tab-link">GSTR1</a></li>
+                        <li><a href="#" class="tab-link">GSTR3B</a></li>
+                        <li><a href="#" class="tab-link">GSTR4</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link" data-section="stock">Configuration ▼</a>
+                <ul class="dropdown-menu">
+                        <li><a href="#" class="tab-link">Company</a></li>
+                        <li><a href="#" class="tab-link">Logo</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link" data-section="stock">Payments ▼</a>
+                <ul class="dropdown-menu">
+                        <li><a href="#" class="tab-link">Receivables</a></li>
+                        <li><a href="#" class="tab-link">Receivables[B2B]</a></li>
+                        <li><a href="#" class="tab-link">Payable</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link" data-section="stock">Help ▼</a>
+                <ul class="dropdown-menu">
+                        <li><a href="#" class="tab-link">Search GST</a></li>
+                        <li><a href="#" class="tab-link">E-way Bill</a></li>
+                        <li><a href="#" class="tab-link">GST portal</a></li>
+                        <li><a href="#" class="tab-link">YouTube</a></li>
+                    </ul>
+                </li>
             </ul>
         </nav>
     </header>
@@ -74,6 +809,7 @@
                         </select>
                     <label>GST IN:</label>
                     <input type="text" placeholder="GST number">
+                    
                 </div>
                 <div class="form-row">
                         <label>Select Customer</label>
@@ -98,12 +834,33 @@
                 </div>
                 <div class="form-row">
                     <label>Place of Supply:</label>
-                    <input type="text" placeholder="Enter place of supply">
+                    <input type="text" value="Local">
+                    <label>Address:</label>
+                    <input type="text" placeholder="Enter Address">
                 </div>
                 <div class="form-row form-row-btn-right">
                     <button id="createInvoiceBtn" class="create-invoice-btn">Create Invoice</button>
                 </div>
                  <div id="grandTotalTabDisplay" class="grand-total-tab" style="display:none; margin: 20px 0 10px 0; font-weight:bold; color:#333;">Grand Total: ₹ <span id="grandTotalTab">0.00</span>
+                </div>
+                <!-- Action Buttons and Dropdowns Row -->
+                <div class="action-bar" style="display: flex; gap: 10px; align-items: right; margin-bottom: 10px;">
+                    <button id="whatsappBtn" class="action-btn">WhatsApp</button>
+                    <button id="duplicateBtn" class="action-btn">Duplicate</button>
+                    <button id="triplicateBtn" class="action-btn">Triplicate</button>
+                    <button id="printBtn" class="action-btn">Print</button>
+                    <select id="paperSelect" class="action-select">
+                        <option value="">Select Paper</option>
+                        <option value="A4P">A4P</option>
+                        <option value="A4L">A4L</option>
+                        <option value="A5P">A5P</option>
+                        <option value="A5L">A5L</option>
+                    </select>
+                    <select id="printerSelect" class="action-select">
+                        <option value="default">Default Printer</option>
+                        <option value="pdf">PDF</option>
+                        <option value="excel">EXCEL</option>
+                    </select>
                 </div>
                 <div id="invoiceItemsTableContainer" style="display:none; margin-bottom: 10px;">
                     <table class="invoice-items-table" style="width:100%; border-collapse:collapse;">
@@ -112,7 +869,8 @@
                                 <th>Item Name</th>
                                 <th>Barcode</th>
                                 <th>Qty</th>
-                                <th>Price</th>
+                                <th>Sale Amount</th>
+                                <th>Taxable Value</th>
                                 <th>Discount</th>
                                 <th>SGST</th>
                                 <th>CGST</th>
@@ -132,20 +890,63 @@
                 <div class="item-form-row-flex">
                     <div class="item-form-fields-box">
                         <div class="item-form-row">
-                            <input type="text" id="hsnCode" placeholder="HSN Code">
-                            <input type="number" id="gst" placeholder="GST %">
-                            <input type="number" id="cess" placeholder="CESS %"> 
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label for="hsnCode" style="font-size:13px; margin-bottom:2px; font-weight:600;">HSN Code</label>
+                                <input type="text" id="hsnCode" placeholder="HSN Code">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label for="gst" style="font-size:13px; margin-bottom:2px; font-weight:600;">GST %</label>
+                                <input type="number" id="gst" placeholder="GST %">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label for="cess" style="font-size:13px; margin-bottom:2px; font-weight:600;">CESS %</label>
+                                <input type="number" id="cess" placeholder="CESS %"> 
+                            </div>
                         </div>
                         <div class="item-form-row">
-                            <input type="text" id="itemName" placeholder="Item Name" style="width: 100%; min-width: 250px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
+                                <div style="display:flex; flex-direction:column; align-items:flex-start; margin-right:10px;">
+                                    <label for="oldMrpTop" style="font-size:13px; margin-bottom:2px; font-weight:600;">Old MRP</label>
+                                    <input type="number" id="oldMrpTop" placeholder="Old MRP" style="width: 120px;">
+                                </div>
+                                <div style="display:flex; flex-direction:column; align-items:flex-start; flex:1;">
+                                    <label for="itemName" style="font-size:13px; margin-bottom:2px; font-weight:600;">Item Name</label>
+                                    <input type="text" id="itemName" placeholder="Item Name" style="width:100%; min-width: 250px;">
+                                </div>
+                            </div>
                         </div>
                         <div class="item-form-row" id="itemExtraFields">
-                            <input type="text" id="barcode" placeholder="Barcode">
-                            <input type="number" id="salePrice" placeholder="Sale Price">
-                            <input type="number" id="oldMrp" placeholder="MRP">
-                            <input type="number" id="rateBeforeGst" placeholder="Rate Before GST">
-                            <input type="number" id="quantity" placeholder="Quantity" value="1">
-                            <input type="number" id="discount" placeholder="Discount %">
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label for="barcode" style="font-size:13px; margin-bottom:2px; font-weight:600;">Barcode</label>
+                                <input type="text" id="barcode" placeholder="Barcode">
+                            </div>
+                            <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                                <input type="checkbox" id="perPieceCheckbox" style="width:18px; height:18px; margin-right:4px;">
+                                <label for="perPieceCheckbox" style="font-size:13px; user-select:none;">Per Piece Price</label>
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label for="salePrice" style="font-size:13px; margin-bottom:2px; font-weight:600;">Sale Price</label>
+                                <input type="number" id="salePrice" placeholder="Sale Price">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label for="oldMrp" style="font-size:13px; margin-bottom:2px; font-weight:600;">MRP</label>
+                                <input type="number" id="oldMrp" placeholder="MRP">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label for="rateBeforeGst" style="font-size:13px; margin-bottom:2px; font-weight:600;">Rate Before GST</label>
+                                <input type="number" id="rateBeforeGst" placeholder="Rate Before GST">
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                                <label for="quantity" style="font-size:13px; margin-bottom:2px; font-weight:600;">Quantity</label>
+                                <input type="number" id="quantity" placeholder="Quantity" value="1">
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="display:flex; flex-direction:column; align-items:flex-start; flex:1;">
+                                    <label for="discount" style="font-size:13px; margin-bottom:2px; font-weight:600;">Discount</label>
+                                    <input type="number" id="discount" placeholder="Discount" value="0" style="width:100%;">
+                                </div>
+                                <input type="checkbox" id="discountCheckbox" style="width:18px; height:18px; margin-left:4px; align-self:flex-end;"> <label for="discountCheckbox" style="font-size:13px; user-select:none; align-self:flex-end;">Value</label>
+                            </div>
                         </div>
                         <div class="item-form-row form-row-btn-right">
                             <button id="addItemBtn" class="add-item-btn">Add</button>
@@ -153,13 +954,33 @@
                         
                     </div>
                 <h3>Grand Total: ₹ <span id="grandTotal">0.00</span></h3>
+                <!-- Action Buttons and Dropdowns Row for Items Tab -->
+                <div class="action-bar" style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+                    <button id="whatsappBtnItems" class="action-btn">WhatsApp</button>
+                    <button id="duplicateBtnItems" class="action-btn">Duplicate</button>
+                    <button id="triplicateBtnItems" class="action-btn">Triplicate</button>
+                    <button id="printBtnItems" class="action-btn">Print</button>
+                    <select id="paperSelectItems" class="action-select">
+                        <option value="">Select Paper</option>
+                        <option value="A4P">A4P</option>
+                        <option value="A4L">A4L</option>
+                        <option value="A5P">A5P</option>
+                        <option value="A5L">A5L</option>
+                    </select>
+                    <select id="printerSelectItems" class="action-select">
+                        <option value="default">Default Printer</option>
+                        <option value="pdf">PDF</option>
+                        <option value="excel">EXCEL</option>
+                    </select>
+                </div>
                 <table>
                     <thead>
                         <tr>
                             <th>Item Name</th>
                                 <th>Barcode</th>
                                 <th>Qty</th>
-                                <th>Price</th>
+                                <th>Sale Amount</th>
+                                <th>Taxable Value</th>
                                 <th>Discount</th>
                                 <th>SGST</th>
                                 <th>CGST</th>
