@@ -412,6 +412,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const rateBeforeGstInput = section.querySelector('.rate-before-gst-input');
         const perPieceCheckbox = section.querySelector('.per-piece-checkbox');
         const discountCheckbox = section.querySelector('.discount-checkbox');
+        const hsnCodeInput = section.querySelector('.hsn-code-input');
+        const mrpInput = section.querySelector('.mrp-input');
 
         // Get values from the inputs
         const itemName = itemNameInput.value.trim();
@@ -424,6 +426,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const cess = parseFloat(cessInput.value) || 0;
         const rateBeforeGst = parseFloat(rateBeforeGstInput.value) || 0;
         const perPieceChecked = perPieceCheckbox.checked;
+        const hsnCode = hsnCodeInput ? hsnCodeInput.value : '';
+        const mrp = mrpInput ? mrpInput.value : '';
 
         // Basic validation
         if (!itemName || salePrice <= 0) {
@@ -461,6 +465,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // --- Update Table ---
         const row = document.createElement("tr");
+        // Store raw data on the row for easy editing
+        row.dataset.itemName = itemName;
+        row.dataset.barcode = barcode;
+        row.dataset.quantity = quantity;
+        row.dataset.salePrice = salePriceInput.value;
+        row.dataset.discount = discount;
+        row.dataset.discountIsValue = discountIsValue;
+        row.dataset.gst = gst;
+        row.dataset.cess = cess;
+        row.dataset.rateBeforeGst = rateBeforeGst;
+        row.dataset.perPieceChecked = perPieceChecked;
+        row.dataset.hsnCode = hsnCode;
+        row.dataset.mrp = mrp;
+
         row.innerHTML = `
             <td>${itemName}</td>
             <td>${barcode}</td>
@@ -485,8 +503,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // --- Update Grand Total ---
         let currentGrandTotal = 0;
-        itemTableBody.querySelectorAll('tr').forEach(r => {
-            const totalCell = r.cells[r.cells.length - 1]; // Last cell is Total
+        itemTableBody.querySelectorAll('tr').forEach(r => { 
+            const totalCell = r.cells[r.cells.length - 2]; // Second to last cell is Total
             currentGrandTotal += parseFloat(totalCell.textContent.replace('₹', '')) || 0;
         });
         grandTotalEl.textContent = currentGrandTotal.toFixed(2);
@@ -500,12 +518,130 @@ document.addEventListener("DOMContentLoaded", function () {
         salePriceInput.value = '';
         quantityInput.value = '1';
         discountInput.value = '0';
-        gstInput.value = '';
+        gstInput.value = '';    document.body.addEventListener('keydown', function(e) {
+            // This condition checks if the 'Enter' key was pressed
+            // AND if the cursor was in a barcode input field.
+            if (e.key === 'Enter' && e.target.matches('.barcode-input')) {
+                // ... code to look up the item and add it to the invoice ...
+            }
+        });
+        
         cessInput.value = '';
         rateBeforeGstInput.value = '';
         perPieceCheckbox.checked = false;
         discountCheckbox.checked = false;
         itemNameInput.focus(); // Move cursor back to item name
+    });
+
+    // Delegated event listener for Edit and Delete buttons
+    document.body.addEventListener('click', function(e) {
+        const target = e.target;
+
+        // Handle Delete Button
+        if (target.closest('.delete-item-btn')) {
+            e.preventDefault();
+            const row = target.closest('tr');
+            if (!row) return;
+
+            // Find the active section to update its specific totals
+            const activeSection = row.closest('.content-section.active');
+            if (!activeSection) return;
+
+            // Ask for confirmation before deleting
+            if (confirm('Are you sure you want to delete this item?')) {
+                // Remove the row from the DOM
+                row.remove();
+
+                // Recalculate totals and sync tables for the current section
+                updateTotalsAndSyncTables(activeSection);
+            }
+        }
+
+        // Handle Edit Button (Full Implementation)
+        if (target.closest('.edit-item-btn')) {
+            e.preventDefault();
+            const row = target.closest('tr');
+            if (!row) return;
+
+            const activeSection = row.closest('.content-section.active');
+            if (!activeSection) return;
+            
+            // --- Populate form from row data attributes ---
+            const itemNameInput = activeSection.querySelector('.item-name-input');
+            const barcodeInput = activeSection.querySelector('.barcode-input');
+            const quantityInput = activeSection.querySelector('.quantity-input');
+            const salePriceInput = activeSection.querySelector('.sale-price-input');
+            const discountInput = activeSection.querySelector('.discount-input');
+            const discountCheckbox = activeSection.querySelector('.discount-checkbox');
+            const gstInput = activeSection.querySelector('.gst-input');
+            const cessInput = activeSection.querySelector('.cess-input');
+            const rateBeforeGstInput = activeSection.querySelector('.rate-before-gst-input');
+            const perPieceCheckbox = activeSection.querySelector('.per-piece-checkbox');
+            const hsnCodeInput = activeSection.querySelector('.hsn-code-input');
+            const mrpInput = activeSection.querySelector('.mrp-input');
+
+            if (itemNameInput) itemNameInput.value = row.dataset.itemName || '';
+            if (barcodeInput) barcodeInput.value = row.dataset.barcode || '';
+            if (quantityInput) quantityInput.value = row.dataset.quantity || '1';
+            if (salePriceInput) salePriceInput.value = row.dataset.salePrice || '';
+            if (discountInput) discountInput.value = row.dataset.discount || '0';
+            if (discountCheckbox) discountCheckbox.checked = (row.dataset.discountIsValue === 'true');
+            if (gstInput) gstInput.value = row.dataset.gst || '';
+            if (cessInput) cessInput.value = row.dataset.cess || '';
+            if (rateBeforeGstInput) rateBeforeGstInput.value = row.dataset.rateBeforeGst || '';
+            if (perPieceCheckbox) perPieceCheckbox.checked = (row.dataset.perPieceChecked === 'true');
+            if (hsnCodeInput) hsnCodeInput.value = row.dataset.hsnCode || '';
+            if (mrpInput) mrpInput.value = row.dataset.mrp || '';
+
+            // --- Remove the row and update totals ---
+            row.remove();
+            updateTotalsAndSyncTables(activeSection);
+
+            // --- Focus the first input for a good UX ---
+            if (itemNameInput) itemNameInput.focus();
+        }
+    });
+
+    // --- Barcode Scanning Simulation ---
+    // In a real app, this would come from a database.
+    const itemDatabase = {
+        '8905166471218': { name: 'Sample Item A', price: 150.00, gst: 18, cess: 0 },
+        '987654321098': { name: 'Sample Item B', price: 275.50, gst: 12, cess: 0 },
+        '112233445566': { name: 'Luxury Good C', price: 1200.00, gst: 28, cess: 5 },
+    };
+
+    let barcodeScanTimer = null;
+    document.body.addEventListener('input', function(e) {
+        if (e.target.matches('.barcode-input')) {
+            clearTimeout(barcodeScanTimer); // Reset timer on each input
+
+            barcodeScanTimer = setTimeout(() => {
+                const barcodeInput = e.target;
+                const barcodeValue = barcodeInput.value.trim();
+                const activeSection = barcodeInput.closest('.content-section.active');
+
+                if (barcodeValue && activeSection) {
+                    const itemData = itemDatabase[barcodeValue];
+
+                    if (itemData) {
+                        // Found the item, now populate the fields in the active section
+                        activeSection.querySelector('.item-name-input').value = itemData.name;
+                        activeSection.querySelector('.sale-price-input').value = itemData.price.toFixed(2);
+                        activeSection.querySelector('.gst-input').value = itemData.gst;
+                        activeSection.querySelector('.cess-input').value = itemData.cess;
+
+                        // Trigger calculation and then click the "Add" button
+                        updateRateBeforeGst(activeSection);
+                        activeSection.querySelector('.add-item-btn')?.click();
+                    } else {
+                        // Only show alert if the input is not empty, to avoid alerts on clear
+                        if (barcodeInput.value) {
+                            alert(`Item with barcode "${barcodeValue}" not found.`);
+                        }
+                    }
+                }
+            }, 1100); // Wait 250ms (1/4 sec) after the last character is typed
+        }
     });
 
     // Store item details by name
@@ -526,21 +662,22 @@ document.addEventListener("DOMContentLoaded", function () {
         const grandTotalTabAmount = section.querySelector('.grand-total-tab-amount');
         const invoiceItemsTableBody = section.querySelector('.invoice-items-table-body');
 
-        if (!itemTableBody || !grandTotalEl || !grandTotalTabAmount || !invoiceItemsTableBody) return;
+        if (!itemTableBody || !grandTotalEl || !grandTotalTabAmount) return;
 
         let newGrandTotal = 0;
         itemTableBody.querySelectorAll('tr').forEach(r => {
-            // The total cell is now the second to last one
-            const totalCell = r.cells[r.cells.length - 2]; 
+            // The total cell is the second to last one (before Actions)
+            const totalCell = r.cells[r.cells.length - 2];
             newGrandTotal += parseFloat(totalCell.textContent.replace('₹', '')) || 0;
         });
 
         // Update grand total displays
         grandTotalEl.textContent = newGrandTotal.toFixed(2);
         grandTotalTabAmount.textContent = newGrandTotal.toFixed(2);
-
+        
         // Sync the invoice table with the main item table
-        invoiceItemsTableBody.innerHTML = itemTableBody.innerHTML;
+        if (invoiceItemsTableBody)
+            invoiceItemsTableBody.innerHTML = itemTableBody.innerHTML;
     }
 
     // When item name loses focus, fill fields if item exists
@@ -555,7 +692,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     // Delegated event listener for Enter key on item input fields to trigger Add button
     document.body.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && e.target.matches('.sale-price-input, .rate-before-gst-input, .quantity-input')) {
+        if (e.key === 'Enter' && e.target.matches('.sale-price-input, .rate-before-gst-input, .quantity-input, .item-name-input')) {
             e.preventDefault();
             const activeSection = e.target.closest('.content-section.active');
             activeSection?.querySelector('.add-item-btn')?.click();
