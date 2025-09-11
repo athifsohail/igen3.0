@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Business Dashboard</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Add xlsx library for Excel import/export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -110,6 +112,170 @@
 
     <!-- Main Content -->
     <main>
+        <!-- Add Customer Modal/Section -->
+        <section id="add-customer-section" class="content-section" style="display:none;">
+            <div class="customer-page-container">
+                <div class="customer-form-card">
+                    <h2>Add/Update Customer</h2>
+                    <div class="customer-form-grid-layout">
+                        <!-- Row 1 -->
+                        <div class="form-field-group" style="grid-column: 1 / 3;">
+                            <label for="customerGSTIN">GSTIN</label>
+                            <input id="customerGSTIN" type="text" placeholder="GSTIN">
+                        </div>
+                        <div class="form-field-group" style="justify-content: flex-end; padding-bottom: 10px; grid-column: 3 / 4;">
+                            <div class="checkbox-group" style="margin-bottom: 5px;">
+                                <input id="customerUnreg" type="checkbox" tabindex="-1">
+                                <label for="customerUnreg">UN-REGISTERED</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input id="customerIsSez" type="checkbox" tabindex="-1">
+                                <label for="customerIsSez">Is Sez</label>
+                            </div>
+                        </div>
+                        <!-- 3x2 Grid Starts Here -->
+                        <div class="form-field-group">
+                            <label for="customerName">Name</label>
+                            <input id="customerName" type="text" placeholder="Name">
+                        </div>
+                        <div class="form-field-group">
+                            <label for="customerAadhar">Aadhar Card</label>
+                            <input id="customerAadhar" type="text" placeholder="Enter Aadhar Number">
+                        </div>
+                        <div class="form-field-group">
+                            <label for="customerMobile">Mobile</label>
+                            <input id="customerMobile" type="text" placeholder="Mobile">
+                        </div>
+                        <div class="form-field-group">
+                            <label for="customerEmail">Email</label>
+                            <input id="customerEmail" type="email" placeholder="Email">
+                        </div>
+                         <div class="form-field-group">
+                            <label for="customerState">State</label>
+                            <select id="customerState">
+                                <option>Select State</option>
+                                <option>Andaman & Nicobar Islands</option>
+                                <option>Andhra Pradesh</option>
+                                <option>Arunachal Pradesh</option>
+                                <option>Assam</option>
+                                <option>Bihar</option>
+                                <option>Chandigarh</option>
+                                <option>Chhattisgarh</option>
+                                <option>Dadra and Nagar Haveli and Daman and Diu</option>
+                                <option>Delhi</option>
+                                <option>Goa</option>
+                                <option>Gujarat</option>
+                                <option>Haryana</option>
+                                <option>Himachal Pradesh</option>
+                                <option>Jammu & Kashmir</option>
+                                <option>Jharkhand</option>
+                                <option>Karnataka</option>
+                                <option>Kerala</option>
+                                <option>Ladakh</option>
+                                <option>Lakshadweep</option>
+                                <option>Madhya Pradesh</option>
+                                <option>Maharashtra</option>
+                                <option>Manipur</option>
+                                <option>Meghalaya</option>
+                                <option>Mizoram</option>
+                                <option>Nagaland</option>
+                                <option>Odisha</option>
+                                <option>Puducherry</option>
+                                <option>Punjab</option>
+                                <option>Rajasthan</option>
+                                <option>Sikkim</option>
+                                <option>Tamil Nadu</option>
+                                <option>Telangana</option>
+                                <option>Tripura</option>
+                                <option>Uttar Pradesh</option>
+                                <option>Uttarakhand</option>
+                                <option>West Bengal</option>
+                            </select>
+                        </div>
+                        <div class="form-field-group">
+                            <label for="customerStateCode">State Code</label>
+                            <input id="customerStateCode" type="text" placeholder="e.g., 37">
+                        </div>
+                          <!-- Address, Route, and Add Button Row -->
+                        <div class="form-field-group full-width" style="flex-direction: row; align-items: flex-end; gap: 15px;">
+                            <div style="flex-grow: 1;">
+                                <label for="customerAddress">Address</label>
+                                <input type="text" id="customerAddress" placeholder="Address">
+                            </div>
+                            <div style="flex-grow: 1;">
+                                <label for="customerRoute">Route</label>
+                                <input type="text" id="customerRoute" placeholder="Enter Route Details">
+                            </div>
+                            <button id="updateCustomerBtn" class="btn-save-customer" style="height: 42px; padding: 10px 30px; flex-shrink: 0;">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="customer-table-card">
+                <div class="customer-table-header">
+                    <div style="font-weight:600;">Customer List</div>
+                    <div>
+                        <button id="downloadFormatBtn" class="action-btn" style="background-color: #007bff;">Download Format</button>
+                        <button id="importCustomersBtn" class="action-btn" style="background-color: #28a745;">Import Customers</button>
+                        <input type="file" id="importFile" accept=".xlsx, .xls" style="display: none;">
+                    </div>
+                </div>
+                <div class="customer-search-bar">
+                    <input type="text" id="customerSearchInput" placeholder="Search by Name, Mobile, or GSTIN...">
+                    <button id="customerSearchBtn">Search</button>
+                </div>
+                <table style="width:100%; border-collapse:collapse; background:#fff;">
+                    <thead style="background:#d1d1f7;">
+                        <tr>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>State</th>
+                            <th>Route</th>
+                            <th>State Code</th>
+                            <th>Gstin</th>
+                            <th>Mobile</th>
+                            <th>Email</th>
+                            <th>Aadhar</th>
+                            <th class="actions-column">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customerTableBody">
+                        <!-- Example row -->
+                        <tr>
+                            <td data-field="name">MALIKARJUN.G</td>
+                            <td data-field="address">KANDUKUR</td>
+                            <td data-field="state">Andhra Pradesh</td>
+                            <td data-field="route">KANDUKUR</td>
+                            <td data-field="stateCode">37</td>
+                            <td data-field="gstin">UNREG</td>
+                            <td data-field="mobile">9100319898</td>
+                            <td data-field="email"></td>
+                            <td data-field="aadhar"></td>
+                            <td class="actions-column">
+                                <button class="edit-customer-btn" title="Edit"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9ImZlYXRoZXIgZmVhdGhlci1lZGl0Ij48cGF0aCBkPSJNMTIgMjBIOS41MjVDNi40OCAyMCA0IDE3LjUyIDQgMTQuNDhWOS41MkM0IDYuNDggNi40OCA0IDkuNTIgNGgxLjQ0TTguNSA2LjVMMTMuNSA2LjUiLz48cGF0aCBkPSJNMTggMTMuNzZWMTguNUMxOCAyMC40MyAxNi40MyAyMiAxNC41IDIySDkuNUM3LjU3IDIyIDYgMjAuNDMgNiAxOC41VjkuNUM2IDcuNTcgNy41NyA2IDkuNSA2SDE0Ii8+PHBhdGggZD0iTTE2IDRMMjAgOCIvPjxwYXRoIGQ9Ik0yMS4zOCA2LjYyTDE3LjM4IDExLjYyQzE3LjA0IDExLjk2IDE2LjYxIDEyLjE4IDE2LjE1IDEyLjIyTDEzIDEyLjk5TDEzLjc3IDkuODNDMTMuODEgOS4zOCAxNC4wNCA4Ljk1IDE0LjM4IDguNjJMMTguMzggMy42MkMyMC4wOSAxLjkxIDIyLjA5IDEuOTEgMjIuMzggMi4yQzIzLjA5IDIuOTEgMjMuMDkgNC45MSAyMS4zOCA2LjYyWiIvPjwvc3ZnPg==" alt="Edit"></button>
+                                <button class="delete-customer-btn" title="Delete"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9ImZlYXRoZXIgZmVhdGhlci10cmFzaC0yIj48cG9seWxpbmUgcG9pbnRzPSIzIDYgNSA2IDIxIDYiLz48cGF0aCBkPSJNMTkgNnYxNGExIDEgMCAwIDEtMSAxaC0xMGExIDEgMCAwIDEtMS0xVjZtMyAwViRhMSAxIDAgMCAxIDEtMWg0YTEgMSAwIDAgMSAxIDF2MiIvPjxsaW5lIHgxPSIxMCIgeTE9IjExIiB4Mj0iMTAiIHkyPSIxNyIvPjxsaW5lIHgxPSIxNCIgeTE9IjExIiB4Mj0iMTQiIHkyPSIxNyIvPjwvc3ZnPg==" alt="Delete"></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-field="name">SHAIK BIBIJAN</td>
+                            <td data-field="address">KANDUKUR</td>
+                            <td data-field="state">Andhra Pradesh</td>
+                            <td data-field="route">KANDUKUR</td>
+                            <td data-field="stateCode">37</td>
+                            <td data-field="gstin">UNREG</td>
+                            <td data-field="mobile">9912466456</td>
+                            <td data-field="email"></td>
+                            <td data-field="aadhar"></td>
+                            <td class="actions-column">
+                                <button class="edit-customer-btn" title="Edit"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9ImZlYXRoZXIgZmVhdGhlci1lZGl0Ij48cGF0aCBkPSJNMTIgMjBIOS41MjVDNi40OCAyMCA0IDE3LjUyIDQgMTQuNDhWOS41MkM0IDYuNDggNi40OCA0IDkuNTIgNGgxLjQ0TTguNSA2LjVMMTMuNSA2LjUiLz48cGF0aCBkPSJNMTggMTMuNzZWMTguNUMxOCAyMC40MyAxNi40MyAyMiAxNC41IDIySDkuNUM3LjU3IDIyIDYgMjAuNDMgNiAxOC41VjkuNUM2IDcuNTcgNy41NyA2IDkuNSA2SDE0Ii8+PHBhdGggZD0iTTE2IDRMMjAgOCIvPjxwYXRoIGQ9Ik0yMS4zOCA2LjYyTDE3LjM4IDExLjYyQzE3LjA0IDExLjk2IDE2LjYxIDEyLjE4IDE2LjE1IDEyLjIyTDEzIDEyLjk5TDEzLjc3IDkuODNDMTMuODEgOS4zOCAxNC4wNCA4Ljk1IDE0LjM4IDguNjJMMTguMzggMy42MkMyMC4wOSAxLjkxIDIyLjA5IDEuOTEgMjIuMzggMi4yQzIzLjA5IDIuOTEgMjMuMDkgNC45MSAyMS4zOCA2LjYyWiIvPjwvc3ZnPg==" alt="Edit"></button>
+                                <button class="delete-customer-btn" title="Delete"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9ImZlYXRoZXIgZmVhdGhlci10cmFzaC0yIj48cG9seWxpbmUgcG9pbnRzPSIzIDYgNSA2IDIxIDYiLz48cGF0aCBkPSJNMTkgNnYxNGExIDEgMCAwIDEtMSAxaC0xMGExIDEgMCAwIDEtMS0xVjZtMyAwViRhMSAxIDAgMCAxIDEtMWg0YTEgMSAwIDAgMSAxIDF2MiIvPjxsaW5lIHgxPSIxMCIgeTE9IjExIiB4Mj0iMTAiIHkyPSIxNyIvPjxsaW5lIHgxPSIxNCIgeTE9IjExIiB4Mj0iMTQiIHkyPSIxNyIvPjwvc3ZnPg==" alt="Delete"></button>
+                            </td>
+                        </tr>
+                        <!-- More rows can be dynamically added here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
         <!-- Home Section -->
         <section id="home" class="content-section active">
             <h1>Welcome to Business Dashboard</h1>
@@ -157,6 +323,9 @@
                     <input type="text" id="invoiceNoInputB2B" placeholder="1-S2025-26" style="flex-grow: 0.2;">
                     <label style="margin-left: 20px;">Invoice Date:</label>
                     <input type="date" id="invoiceDateInput" placeholder="Date" style="flex-grow: 0.2;">
+                    <!-- IRN Display Field -->
+                    <label style="margin-left: 20px;">IRN:</label>
+                    <input type="text" class="irn-display" placeholder="IRN from e-bill" style="flex-grow: 1;" readonly>
                 </div>
                 <div class="form-row">
                     <label>Order No:</label>
@@ -195,12 +364,21 @@
                         <option value="A5P">A5P</option>
                         <option value="A5L">A5L</option>
                     </select>
-                    <select id="printerSelect" class="action-select">
+                    <select class="action-select">
                         <option value="default">Default Printer</option>
                         <option value="pdf">PDF</option>
                         <option value="excel">THERMAL PRINTER</option>
                         <option value="excel">EXCEL</option>
                     </select>
+                    <div class="printer-ebill-group">
+                        <div class="ebill-checkbox-container">
+                            <input type="checkbox" class="e-bill-checkbox">
+                            <label>E-bill</label>
+                        </div>
+                    </div>
+                    <div class="json-upload-container" style="display: none;">
+                        <input type="file" class="json-file-input" accept=".json">
+                    </div>
                 </div>
                 <div class="invoice-items-table-container" style="margin-bottom: 10px;">
                     <table class="invoice-items-table" style="width:100%; border-collapse:collapse;">
@@ -251,7 +429,7 @@
                                         <label for="oldMrpTop" style="font-size:13px; margin-bottom:2px; font-weight:600;">Old MRP</label>
                                         <input type="number" id="oldMrpTop-sale" class="old-mrp-top-input" placeholder="Old MRP" style="width: 120px;">
                                     </div>
-                                    <div style="display:flex; flex-direction:column; align-items:flex-start; flex-grow:1;">
+                                    <div style="display:flex; flex-direction:column; align-items:flex-start; flex:1;">
                                         <label for="itemName" style="font-size:13px; margin-bottom:2px; font-weight:600;">Item Name</label>
                                         <input type="text" id="itemName-sale" class="item-name-input" placeholder="Item Name" style="width:100%; min-width: 250px;">
                                     </div>
@@ -315,10 +493,11 @@
                     <select id="printerSelectItems" class="action-select">
                         <option value="default">Default Printer</option>
                         <option value="pdf">PDF</option>
+                        <option value="excel">THERMAL PRINTER</option>
                         <option value="excel">EXCEL</option>
                     </select>
                 </div>
-                <div class="table-scroll-container">
+                <div class="invoice-items-table-container" style="margin-bottom: 10px;">
                     <table>
                         <thead>
                             <tr>
@@ -561,6 +740,11 @@
             </div>
     </section>
 
+    <!-- Note: The same changes for the e-bill feature should be applied to the action bars and form-rows of the following sections:
+        - sale-b2c
+        - credit-sale-b2c
+        - delivery-challan
+        - estimation -->
     <!-- Credit Sale[B2C] Section -->
         <section id="credit-sale-b2c" class="content-section" style="display:none;">
             <h2>Create Credit Sale Invoice [B2C]</h2>
