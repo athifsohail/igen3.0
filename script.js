@@ -190,6 +190,137 @@ function setupSameAsAddress() {
     }
 }
 
+function setupCustomerForm() {
+    const sameAsBillingCheckbox = document.getElementById('sameAsBilling');
+    const billingAddress = document.getElementById('customerBillingAddress');
+    const shippingAddress = document.getElementById('customerShippingAddress');
+
+    if (sameAsBillingCheckbox && billingAddress && shippingAddress) {
+        sameAsBillingCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                shippingAddress.value = billingAddress.value;
+            } else {
+                shippingAddress.value = '';
+            }
+        });
+    }
+    // Add logic for Save and Cancel buttons if needed
+}
+
+let editingCustomerRow = null; // Variable to store the row being edited
+
+function setupGstinUnregisteredLogic() {
+    const unregCheckbox = document.getElementById('customerUnreg');
+    const gstinInput = document.getElementById('customerGSTIN');
+
+    if (!unregCheckbox || !gstinInput) return;
+
+    unregCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            gstinInput.value = 'UNREG';
+            gstinInput.readOnly = true;
+            gstinInput.style.backgroundColor = '#e9ecef'; // A common "disabled" background color
+        } else {
+            gstinInput.value = '';
+            gstinInput.readOnly = false;
+            gstinInput.style.backgroundColor = '#fff';
+        }
+    });
+}
+
+function setupGstinStatePopulation() {
+    const gstinInput = document.getElementById('customerGSTIN');
+    const stateSelect = document.getElementById('customerState');
+    const stateCodeInput = document.getElementById('customerStateCode');
+
+    if (!gstinInput || !stateSelect || !stateCodeInput) return;
+
+    const gstStateMap = {
+        '37': { name: 'Andhra Pradesh', code: '37' },
+        '12': { name: 'Arunachal Pradesh', code: '12' },
+        '18': { name: 'Assam', code: '18' },
+        '10': { name: 'Bihar', code: '10' },
+        '04': { name: 'Chandigarh', code: '04' },
+        '22': { name: 'Chhattisgarh', code: '22' },
+        '26': { name: 'Dadra and Nagar Haveli and Daman and Diu', code: '26' },
+        '07': { name: 'Delhi', code: '07' },
+        '30': { name: 'Goa', code: '30' },
+        '24': { name: 'Gujarat', code: '24' },
+        '06': { name: 'Haryana', code: '06' },
+        '02': { name: 'Himachal Pradesh', code: '02' },
+        '01': { name: 'Jammu & Kashmir', code: '01' },
+        '20': { name: 'Jharkhand', code: '20' },
+        '29': { name: 'Karnataka', code: '29' },
+        '32': { name: 'Kerala', code: '32' },
+        '38': { name: 'Ladakh', code: '38' },
+        '31': { name: 'Lakshadweep', code: '31' },
+        '23': { name: 'Madhya Pradesh', code: '23' },
+        '27': { name: 'Maharashtra', code: '27' },
+        '14': { name: 'Manipur', code: '14' },
+        '17': { name: 'Meghalaya', code: '17' },
+        '15': { name: 'Mizoram', code: '15' },
+        '13': { name: 'Nagaland', code: '13' },
+        '21': { name: 'Odisha', code: '21' },
+        '34': { name: 'Puducherry', code: '34' },
+        '03': { name: 'Punjab', code: '03' },
+        '08': { name: 'Rajasthan', code: '08' },
+        '11': { name: 'Sikkim', code: '11' },
+        '33': { name: 'Tamil Nadu', code: '33' },
+        '36': { name: 'Telangana', code: '36' },
+        '16': { name: 'Tripura', code: '16' },
+        '09': { name: 'Uttar Pradesh', code: '09' },
+        '05': { name: 'Uttarakhand', code: '05' },
+        '19': { name: 'West Bengal', code: '19' },
+        '35': { name: 'Andaman & Nicobar Islands', code: '35' }
+    };
+
+    gstinInput.addEventListener('input', function() {
+        const gstinValue = this.value.trim();
+        if (gstinValue.length >= 2) {
+            const stateCode = gstinValue.substring(0, 2);
+            const stateData = gstStateMap[stateCode];
+            if (stateData) {
+                stateSelect.value = stateData.name;
+                stateCodeInput.value = stateData.code;
+            }
+        }
+    });
+}
+
+/**
+ * Dynamically populates the route dropdowns in all sale sections.
+ * It collects unique routes from the customer table.
+ */
+function updateSaleRouteDropdowns() {
+    const customerTableBody = document.getElementById('customerTableBody');
+    if (!customerTableBody) return;
+
+    const routes = new Set();
+    // Collect all unique routes from the customer table
+    customerTableBody.querySelectorAll('tr').forEach(row => {
+        const routeCell = row.querySelector('[data-field="route"]');
+        if (routeCell && routeCell.textContent.trim()) {
+            routes.add(routeCell.textContent.trim());
+        }
+    });
+
+    const sortedRoutes = Array.from(routes).sort();
+
+    // Find all route dropdowns in the sale sections
+    const routeDropdowns = document.querySelectorAll('#sale select[id^="routeSelect"], #sale-b2c select[id^="routeSelect"], #credit-sale-b2c select[id^="routeSelect"], #delivery-challan select[id^="routeSelect"], #estimation select[id^="routeSelect"]');
+
+    routeDropdowns.forEach(dropdown => {
+        // Preserve the first "Select Route" option, clear the rest
+        const firstOption = dropdown.options[0];
+        dropdown.innerHTML = '';
+        dropdown.appendChild(firstOption);
+
+        // Add the dynamically collected routes
+        sortedRoutes.forEach(route => {
+            dropdown.add(new Option(route, route));
+        });
+    });
+}
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -205,8 +336,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+    // Initialize customer form logic
+    setupCustomerForm();
+
+    setupCustomerAddUpdateLogic();
+
+    // Initialize GSTIN "Unregistered" checkbox logic
+    setupGstinUnregisteredLogic();
+
+    // Initialize GSTIN to State auto-population logic
+    setupGstinStatePopulation();
+
     // Initialize "Same as Address" checkbox logic
     setupSameAsAddress();
+
+    // Initialize Customer Excel Import/Export
+    setupCustomerExcelHandlers();
+
+    // Initialize E-bill functionality
+    setupEbillFeature();
+
+    // Load initial data from the database
+    loadCustomers();
 
     // Add a single, delegated event listener for all dropdown link clicks
     document.querySelector('body').addEventListener('click', function(e) {
@@ -252,7 +403,25 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (manager) {
                         manager.setNextInvoiceNumber();
                         setDefaultDates();
+                        updateSaleRouteDropdowns(); // Update routes when a sale tab is activated
                     }
+                }
+            } else if (text === 'Add Customer') {
+                 // Hide all other sections
+                document.querySelectorAll('.content-section').forEach(sec => {
+                    sec.classList.remove('active');
+                    sec.style.display = 'none';
+                });
+                // Show the add-customer section
+                const addCustomerSection = document.getElementById('add-customer-section');
+                if (addCustomerSection) {
+                    addCustomerSection.classList.add('active');
+                    addCustomerSection.style.display = 'block';
+                    updateSaleRouteDropdowns(); // Also update when navigating to customer page
+                }
+                 // Hide the global search bar
+                if (globalSearchContainer) {
+                    globalSearchContainer.style.display = 'none';
                 }
             } else {
                 if (globalSearchContainer) {
@@ -600,7 +769,319 @@ document.addEventListener("DOMContentLoaded", function () {
             // --- Focus the first input for a good UX ---
             if (itemNameInput) itemNameInput.focus();
         }
+
+        // Handle Customer Delete Button
+        if (target.closest('.delete-customer-btn')) {
+            e.preventDefault();
+            const row = target.closest('tr');
+            if (!row) return;
+
+            if (confirm('Are you sure you want to delete this customer?')) {
+                row.remove();
+                // In a real app, you would also delete this from localStorage or a database.
+            }
+        }
+
+        // Handle Customer Edit Button
+        if (target.closest('.edit-customer-btn')) {
+            e.preventDefault();
+            const row = target.closest('tr');
+            if (!row) return;
+
+            // Get data from the row's cells
+            const name = row.querySelector('[data-field="name"]')?.textContent || '';
+            const address = row.querySelector('[data-field="address"]')?.textContent || '';
+            const state = row.querySelector('[data-field="state"]')?.textContent || '';
+            const gstin = row.querySelector('[data-field="gstin"]')?.textContent || '';
+            const stateCode = row.querySelector('[data-field="stateCode"]')?.textContent || '';
+            const route = row.querySelector('[data-field="route"]')?.textContent || '';
+            const mobile = row.querySelector('[data-field="mobile"]')?.textContent || '';
+            const email = row.querySelector('[data-field="email"]')?.textContent || '';
+            const aadhar = row.querySelector('[data-field="aadhar"]')?.textContent || '';
+
+            // Populate the form fields at the top of the page
+            document.getElementById('customerName').value = name;
+            document.getElementById('customerGSTIN').value = gstin;
+            document.getElementById('customerAddress').value = address;
+            document.getElementById('customerMobile').value = mobile;
+            document.getElementById('customerAadhar').value = aadhar;
+            document.getElementById('customerEmail').value = email;
+            document.getElementById('customerState').value = state;
+            document.getElementById('customerStateCode').value = stateCode;
+            document.getElementById('customerRoute').value = route;
+
+            // Handle checkboxes
+            const unregCheckbox = document.getElementById('customerUnreg');
+            if (gstin.toUpperCase() === 'UNREG') {
+                unregCheckbox.checked = true;
+                unregCheckbox.dispatchEvent(new Event('change')); // Trigger the logic to disable input
+            } else {
+                unregCheckbox.checked = false;
+                unregCheckbox.dispatchEvent(new Event('change'));
+            }
+            // Note: 'Is Sez' checkbox logic would be added here if its state was saved.
+
+            // Change button text to "Update" and store the row being edited
+            const updateBtn = document.getElementById('updateCustomerBtn');
+            updateBtn.textContent = 'Update';
+            editingCustomerRow = row;
+
+            // Scroll to the top of the page to see the form
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     });
+
+function setupCustomerAddUpdateLogic() {
+    const updateBtn = document.getElementById('updateCustomerBtn');
+    if (!updateBtn) return;
+
+    updateBtn.addEventListener('click', function() {
+        // Read all values from the form
+        const name = document.getElementById('customerName').value.trim();
+        const gstin = document.getElementById('customerGSTIN').value.trim();
+        const address = document.getElementById('customerAddress').value.trim();
+        const mobile = document.getElementById('customerMobile').value.trim();
+        const email = document.getElementById('customerEmail').value.trim();
+        const state = document.getElementById('customerState').value;
+        const stateCode = document.getElementById('customerStateCode').value.trim();
+        const route = document.getElementById('customerRoute').value.trim();
+        const aadhar = document.getElementById('customerAadhar').value.trim();
+
+        const isUnregistered = document.getElementById('customerUnreg').checked;
+
+        // --- Validation Logic ---
+        if (!name) {
+            alert('Customer Name is mandatory.');
+            return;
+        }
+        if (!address) {
+            alert('Customer Address is mandatory.');
+            return;
+        }
+
+        if (isUnregistered) {
+            // For unregistered customers, name and address are already checked.
+        } else {
+            // For registered customers, GSTIN is also mandatory.
+            if (!gstin || gstin.toUpperCase() === 'UNREG') {
+                alert('GSTIN is mandatory for registered customers.');
+                return;
+            }
+        }
+
+        if (editingCustomerRow) {
+            // --- UPDATE MODE ---
+            editingCustomerRow.querySelector('[data-field="name"]').textContent = name;
+            editingCustomerRow.querySelector('[data-field="gstin"]').textContent = gstin;
+            editingCustomerRow.querySelector('[data-field="address"]').textContent = address;
+            editingCustomerRow.querySelector('[data-field="mobile"]').textContent = mobile;
+            editingCustomerRow.querySelector('[data-field="email"]').textContent = email;
+            editingCustomerRow.querySelector('[data-field="state"]').textContent = state;
+            editingCustomerRow.querySelector('[data-field="stateCode"]').textContent = stateCode;
+            editingCustomerRow.querySelector('[data-field="route"]').textContent = route;
+            editingCustomerRow.querySelector('[data-field="aadhar"]').textContent = aadhar;
+            
+            // In a real app, you would send a PUT/PATCH request to the server here
+            // to update the customer in the database.
+            alert('Customer updated on the page. Database update not yet implemented.');
+
+        } else {
+            // --- ADD MODE (Send to Server) ---
+            const customerData = { name, gstin, address, mobile, email, state, stateCode, route, aadhar };
+
+            fetch('http://localhost:3000/api/customers', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(customerData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    // Successfully added, now reload the customer list from the server
+                    loadCustomers(); 
+                }
+            })
+            .catch(error => console.error('Error adding customer:', error));
+        }
+
+        // --- RESET AND CLEANUP ---
+        clearCustomerForm();
+        updateBtn.textContent = 'Add';
+        editingCustomerRow = null;
+        // updateSaleRouteDropdowns(); // This will be called by loadCustomers
+    });
+}
+
+/**
+* Fetches customers from the server and populates the table.
+*/
+async function loadCustomers() {
+    try {
+        const response = await fetch('http://localhost:3000/api/customers');
+        const result = await response.json();
+
+        if (result.error) {
+            console.error('Failed to load customers:', result.error);
+            return;
+        }
+
+        const customerTableBody = document.getElementById('customerTableBody');
+        customerTableBody.innerHTML = ''; // Clear existing rows
+
+        result.data.forEach(customer => {
+            const customerTableBody = document.getElementById('customerTableBody');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td data-field="name">${customer.name || ''}</td>
+                <td data-field="address">${customer.address || ''}</td>
+                <td data-field="state">${customer.state || ''}</td>
+                <td data-field="route">${customer.route || ''}</td>
+                <td data-field="stateCode">${customer.stateCode || ''}</td>
+                <td data-field="gstin">${customer.gstin || ''}</td>
+                <td data-field="mobile">${customer.mobile || ''}</td>
+                <td data-field="email">${customer.email || ''}</td>
+                <td data-field="aadhar">${customer.aadhar || ''}</td>
+                <td class="actions-column">
+                    <button class="edit-customer-btn" title="Edit"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9ImZlYXRoZXIgZmVhdGhlci1lZGl0Ij48cGF0aCBkPSJNMTIgMjBIOS41MjVDNi40OCAyMCA0IDE3LjUyIDQgMTQuNDhWOS41MkM0IDYuNDggNi40OCA0IDkuNTIgNGgxLjQ0TTguNSA2LjVMMTMuNSA2LjUiLz48cGF0aCBkPSJNMTggMTMuNzZWMTguNUMxOCAyMC40MyAxNi40MyAyMiAxNC41IDIySDkuNUM3LjU3IDIyIDYgMjAuNDMgNiAxOC41VjkuNUM2IDcuNTcgNy41NyA2IDkuNSA2SDE0Ii8+PHBhdGggZD0iTTE2IDRMMjAgOCIvPjxwYXRoIGQ9Ik0yMS4zOCA2LjYyTDE3LjM4IDExLjYyQzE3LjA0IDExLjk2IDE2LjYxIDEyLjE4IDE2LjE1IDEyLjIyTDEzIDEyLjk5TDEzLjc3IDkuODNDMTMuODEgOS4zOCAxNC4wNCA4Ljk1IDE0LjM4IDguNjJMMTguMzggMy42MkMyMC4wOSAxLjkxIDIyLjA5IDEuOTEgMjIuMzggMi4yQzIzLjA5IDIuOTEgMjMuMDkgNC45MSAyMS4zOCA2LjYyWiIvPjwvc3ZnPg==" alt="Edit"></button>
+                    <button class="delete-customer-btn" title="Delete"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9ImZlYXRoZXIgZmVhdGhlci10cmFzaC0yIj48cG9seWxpbmUgcG9pbnRzPSIzIDYgNSA2IDIxIDYiLz48cGF0aCBkPSJNMTkgNnYxNGExIDEgMCAwIDEtMSAxaC0xMGExIDEgMCAwIDEtMS0xVjZtMyAwViRhMSAxIDAgMCAxIDEtMWg0YTEgMSAwIDAgMSAxIDF2MiIvPjxsaW5lIHgxPSIxMCIgeTE9IjExIiB4Mj0iMTAiIHkyPSIxNyIvPjxsaW5lIHgxPSIxNCIgeTE9IjExIiB4Mj0iMTQiIHkyPSIxNyIvPjwvc3ZnPg==" alt="Delete"></button>
+                </td>
+            `;
+            customerTableBody.appendChild(newRow);
+        });
+
+        updateSaleRouteDropdowns(); // Now that customers are loaded, update the route dropdowns
+    } catch (error) {
+        console.error('Error fetching customers:', error);
+    }
+}
+
+function clearCustomerForm() {
+    document.getElementById('customerName').value = '';
+    document.getElementById('customerGSTIN').value = '';
+    document.getElementById('customerAddress').value = '';
+    document.getElementById('customerMobile').value = '';
+    document.getElementById('customerEmail').value = '';
+    document.getElementById('customerStateCode').value = '';
+    document.getElementById('customerAadhar').value = '';
+    document.getElementById('customerRoute').value = '';
+    document.getElementById('customerUnreg').checked = false;
+    document.getElementById('customerIsSez').checked = false;
+    document.getElementById('customerGSTIN').readOnly = false;
+    document.getElementById('customerGSTIN').style.backgroundColor = '#fff';
+}
+
+function setupCustomerExcelHandlers() {
+    const downloadBtn = document.getElementById('downloadFormatBtn');
+    const importBtn = document.getElementById('importCustomersBtn');
+    const fileInput = document.getElementById('importFile');
+
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function() {
+            // Define headers for the Excel file
+            const headers = [
+                "Name", "Address", "State", "Route", "State Code", 
+                "GSTIN", "Mobile", "Email", "Aadhar"
+            ];
+            
+            // Create a worksheet with only the headers
+            const ws = XLSX.utils.aoa_to_sheet([headers]);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Customer_Format");
+
+            // Trigger the download
+            XLSX.writeFile(wb, "Customer_Import_Format.xlsx");
+        });
+    }
+
+    if (importBtn && fileInput) {
+        importBtn.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const data = new Uint8Array(event.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                const json = XLSX.utils.sheet_to_json(worksheet);
+
+                const customerTableBody = document.getElementById('customerTableBody');
+                json.forEach(customer => {
+                    const newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                        <td data-field="name">${customer.Name || ''}</td>
+                        <td data-field="address">${customer.Address || ''}</td>
+                        <td data-field="state">${customer.State || ''}</td>
+                        <td data-field="route">${customer.Route || ''}</td>
+                        <td data-field="stateCode">${customer['State Code'] || ''}</td>
+                        <td data-field="gstin">${customer.GSTIN || ''}</td>
+                        <td data-field="mobile">${customer.Mobile || ''}</td>
+                        <td data-field="email">${customer.Email || ''}</td>
+                        <td data-field="aadhar">${customer.Aadhar || ''}</td>
+                        <td class="actions-column">
+                            <button class="edit-customer-btn" title="Edit"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9ImZlYXRoZXIgZmVhdGhlci1lZGl0Ij48cGF0aCBkPSJNMTIgMjBIOS41MjVDNi40OCAyMCA0IDE3LjUyIDQgMTQuNDhWOS41MkM0IDYuNDggNi40OCA0IDkuNTIgNGgxLjQ0TTguNSA2LjVMMTMuNSA2LjUiLz48cGF0aCBkPSJNMTggMTMuNzZWMTguNUMxOCAyMC40MyAxNi40MyAyMiAxNC41IDIySDkuNUM3LjU3IDIyIDYgMjAuNDMgNiAxOC41VjkuNUM2IDcuNTcgNy41NyA2IDkuNSA2SDE0Ii8+PHBhdGggZD0iTTE2IDRMMjAgOCIvPjxwYXRoIGQ9Ik0yMS4zOCA2LjYyTDE3LjM4IDExLjYyQzE3LjA0IDExLjk2IDE2LjYxIDEyLjE4IDE2LjE1IDEyLjIyTDEzIDEyLjk5TDEzLjc3IDkuODNDMTMuODEgOS4zOCAxNC4wNCA4Ljk1IDE0LjM4IDguNjJMMTguMzggMy42MkMyMC4wOSAxLjkxIDIyLjA5IDEuOTEgMjIuMzggMi4yQzIzLjA5IDIuOTEgMjMuMDkgNC45MSAyMS4zOCA2LjYyWiIvPjwvc3ZnPg==" alt="Edit"></button>
+                            <button class="delete-customer-btn" title="Delete"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9ImZlYXRoZXIgZmVhdGhlci10cmFzaC0yIj48cG9seWxpbmUgcG9pbnRzPSIzIDYgNSA2IDIxIDYiLz48cGF0aCBkPSJNMTkgNnYxNGExIDEgMCAwIDEtMSAxaC0xMGExIDEgMCAwIDEtMS0xVjZtMyAwViRhMSAxIDAgMCAxIDEtMWg0YTEgMSAwIDAgMSAxIDF2MiIvPjxsaW5lIHgxPSIxMCIgeTE9IjExIiB4Mj0iMTAiIHkyPSIxNyIvPjxsaW5lIHgxPSIxNCIgeTE9IjExIiB4Mj0iMTQiIHkyPSIxNyIvPjwvc3ZnPg==" alt="Delete"></button>
+                        </td>
+                    `;
+                    customerTableBody.appendChild(newRow);
+                });
+                updateSaleRouteDropdowns(); // Refresh routes in sale tabs
+                alert(`${json.length} customers imported successfully!`);
+            };
+            reader.readAsArrayBuffer(file);
+
+            // Reset file input to allow importing the same file again
+            e.target.value = '';
+        });
+    }
+}
+
+function setupEbillFeature() {
+    // Use event delegation on the body to handle all e-bill checkboxes
+    document.body.addEventListener('change', function(e) {
+        if (e.target.matches('.e-bill-checkbox')) {
+            const checkbox = e.target;
+            const activeSection = checkbox.closest('.content-section.active');
+            if (!activeSection) return;
+
+            const jsonUploadContainer = activeSection.querySelector('.json-upload-container');
+            if (jsonUploadContainer) {
+                jsonUploadContainer.style.display = checkbox.checked ? 'flex' : 'none';
+            }
+        }
+
+        if (e.target.matches('.json-file-input')) {
+            const fileInput = e.target;
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const activeSection = fileInput.closest('.content-section.active');
+            if (!activeSection) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const jsonContent = JSON.parse(event.target.result);
+                    const irn = jsonContent.Irn; // Case-sensitive 'Irn'
+
+                    const irnDisplay = activeSection.querySelector('.irn-display');
+                    if (irnDisplay) {
+                        irnDisplay.value = irn || 'IRN not found in file';
+                    }
+                } catch (error) {
+                    alert('Failed to parse JSON file. Please ensure it is a valid JSON.');
+                    console.error("JSON Parsing Error:", error);
+                }
+            };
+            reader.readAsText(file);
+        }
+    });
+}
 
     // --- Barcode Scanning Simulation ---
     // In a real app, this would come from a database.
@@ -640,7 +1121,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                     }
                 }
-            }, 1100); // Wait 250ms (1/4 sec) after the last character is typed
+            }, 1150); // Wait 250ms (1/4 sec) after the last character is typed
         }
     });
 
@@ -692,7 +1173,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     // Delegated event listener for Enter key on item input fields to trigger Add button
     document.body.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && e.target.matches('.sale-price-input, .rate-before-gst-input, .quantity-input, .item-name-input')) {
+        if (e.key === 'Enter' && e.target.matches('.sale-price-input, .rate-before-gst-input, .quantity-input, .item-name-input, .discount-input')) {
             e.preventDefault();
             const activeSection = e.target.closest('.content-section.active');
             activeSection?.querySelector('.add-item-btn')?.click();
@@ -901,53 +1382,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-
-    // ✅ Navigation Switching
-    navLinks.forEach(link => {
-        // Avoid re-attaching a listener to the home link
-        if (link.getAttribute("data-section") === "home") return;
-
-        link.addEventListener("click", function(e) {
-            e.preventDefault();
-
-            // Remove active from all
-            navLinks.forEach(l => l.classList.remove("active"));
-            contentSections.forEach(section => {
-                section.classList.remove("active");
-                section.style.display = "none";
-            });
-
-            // Add active to clicked link and its section
-            this.classList.add("active");
-            const sectionId = this.getAttribute("data-section");
-            const activeSection = document.getElementById(sectionId);
-            if (activeSection) {
-                activeSection.classList.add("active");
-                activeSection.style.display = "block";
-            }
-
-
-            // Hide global search if not a sale section
-            if (sectionId !== 'sale' && globalSearchContainer) {
-                globalSearchContainer.style.display = 'none';
-            }
-
-            // If Sale section is opened, show its tab container
-            if (sectionId === "sale") {
-                const saleTabContainer = activeSection.querySelector('.tab-container');
-                if (saleTabContainer) saleTabContainer.style.display = "flex";
-
-                // Set the next available invoice number for B2B sales
-                b2bInvoiceManager.setNextInvoiceNumber();
-                setDefaultDates();
-
-                if (globalSearchContainer) globalSearchContainer.style.display = 'flex';
-            } else if (!activeSection.id.startsWith('sale')) { // Hide for non-sale sections
-                document.querySelectorAll('.tab-container').forEach(tc => tc.style.display = 'none');
-            }
-        });
-    });
-
     // Global Search Logic
     const globalSearchBtn = document.getElementById('globalSearchBtn');
     const globalSearchInput = document.getElementById('globalSearchInput');
@@ -970,6 +1404,40 @@ document.addEventListener("DOMContentLoaded", function () {
                 globalSearchBtn.click(); // Trigger the search button's click event
             }
         });
+        // --- Customer Page Search Logic ---
+    const customerSearchInput = document.getElementById('customerSearchInput');
+    const customerSearchBtn = document.getElementById('customerSearchBtn');
+    const customerTableBody = document.getElementById('customerTableBody');
+
+    function filterCustomerTable() {
+        if (!customerSearchInput || !customerTableBody) return;
+
+        const searchTerm = customerSearchInput.value.toLowerCase().trim();
+        const rows = customerTableBody.querySelectorAll('tr');
+
+        rows.forEach(row => {
+            const nameCell = row.querySelector('[data-field="name"]');
+            const gstinCell = row.querySelector('[data-field="gstin"]');
+            const mobileCell = row.querySelector('[data-field="mobile"]');
+
+            const name = nameCell ? nameCell.textContent.toLowerCase() : '';
+            const gstin = gstinCell ? gstinCell.textContent.toLowerCase() : '';
+            const mobile = mobileCell ? mobileCell.textContent.toLowerCase() : '';
+
+            if (name.includes(searchTerm) || gstin.includes(searchTerm) || mobile.includes(searchTerm)) {
+                row.style.display = ''; // Show the row
+            } else {
+                row.style.display = 'none'; // Hide the row
+            }
+        });
+    }
+
+    if (customerSearchBtn) {
+        customerSearchBtn.addEventListener('click', filterCustomerTable);
+    }
+    if (customerSearchInput) {
+        customerSearchInput.addEventListener('keyup', filterCustomerTable); // Live search
+    }
     }
 
     // ✅ Create Invoice → Switch to Item tab
