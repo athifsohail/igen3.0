@@ -889,7 +889,7 @@ function setupCustomerAddUpdateLogic() {
             // --- ADD MODE (Send to Server) ---
             const customerData = { name, gstin, address, mobile, email, state, stateCode, route, aadhar };
 
-            fetch('http://localhost:3000/api/customers', {
+            fetch('/api/customers', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(customerData)
@@ -919,7 +919,7 @@ function setupCustomerAddUpdateLogic() {
 */
 async function loadCustomers() {
     try {
-        const response = await fetch('http://localhost:3000/api/customers');
+        const response = await fetch('/api/customers');
         const result = await response.json();
 
         if (result.error) {
