@@ -64,7 +64,7 @@
     }
 }
 /* Edit/Delete Buttons in Item Table */
-.edit-item-btn, .delete-item-btn {
+.edit-item-btn, .delete-item-btn, .edit-customer-btn, .delete-customer-btn {
     padding: 4px 8px;
     border: none;
     border-radius: 4px;
@@ -73,16 +73,16 @@
     font-size: 13px;
     margin: 0 2px;
 }
-.edit-item-btn {
+.edit-item-btn, .edit-customer-btn {
     background-color: #1976d2; /* Blue */
 }
-.edit-item-btn:hover {
+.edit-item-btn:hover, .edit-customer-btn:hover {
     background-color: #0d47a1;
 }
-.delete-item-btn {
+.delete-item-btn, .delete-customer-btn {
     background-color: #d32f2f; /* Red */
 }
-.delete-item-btn:hover {
+.delete-item-btn:hover, .delete-customer-btn:hover {
     background-color: #b71c1c;
 }
 .edit-item-btn img, .delete-item-btn img {
@@ -102,6 +102,7 @@
     align-items: center;
     margin: 10px 0 10px 0;
     flex-wrap: wrap;
+    justify-content: flex-end; /* Aligns buttons to the right */
 }
 .action-btn {
     background: #1976d2;
@@ -124,6 +125,32 @@
     background: #fff;
     color: #222;
 }
+
+/* E-bill Feature Styles */
+.printer-ebill-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.ebill-checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: flex-end; /* Align to the right */
+}
+
+.ebill-checkbox-container label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.json-upload-container {
+    display: flex;
+    align-items: center;
+}
+
 #invoice-section input[type="text"],
 #invoice-section input[type="date"],
 #invoice-section select {
@@ -378,8 +405,8 @@ body {
 /* Global Search Container */
 .global-search-container {
     position: fixed;
-    top: 85px; /* Below the navbar */
-    left: 1325px; 
+    top: 90px; /* Below the navbar */
+    left: 1324px; 
     right: 30px;
     display: flex;
     flex-direction: row;
@@ -568,4 +595,269 @@ h3 {
     padding: 10px;
     font-size: 1rem;
     resize: vertical;
+}
+
+/* --- Add Customer Form Styles --- */
+.customer-form-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 100px;
+    background-color: #e31414;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.customer-form-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+    font-size: 1.8rem;
+}
+
+.customer-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.form-column .form-card {
+    background-color: #f9f9f9;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    height: 100%;
+}
+
+.form-card h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #0d47a1;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;     
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #555;
+    font-size: 14px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="tel"],
+.form-group input[type="email"],
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #1976d2;
+    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.address-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.same-as-billing-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.same-as-billing-wrapper label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+.customer-form-actions {
+    display: flex;
+    justify-content: right;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-save-customer, .btn-cancel {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-save-customer {
+    background-color: #28a745;
+    color: white;
+}
+.btn-save-customer:hover {
+    background-color: #218838;
+}
+
+.btn-cancel {
+    background-color: #6c757d;
+    color: white;
+}
+.btn-cancel:hover {
+    background-color: #5a6268;
+}
+
+@media (max-width: 900px) {
+    .customer-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- Add Customer Page Cleanup --- */
+.customer-page-container {
+    max-width: 1500px; /* Widen container for side-by-side layout */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column; /* Stack the form and table vertically */
+    gap: 20px;
+    align-items: stretch; /* Ensure both items take full width */
+}
+
+.customer-form-card {
+    /* Removed fixed width and sticky positioning */
+    width: 100%;
+}
+.customer-table-card {
+    /* Removed flex-grow property */
+    width: 100%;
+    height: 50%;
+}
+
+.customer-form-card, .customer-table-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #e8e8e8;
+}
+
+.customer-form-card h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.customer-form-grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px 25px; /* Further reduced row-gap */
+}
+
+.form-field-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-field-group.full-width {
+    grid-column: 1 / -1; /* Span across both columns */
+}
+
+.form-field-group label {
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #444;
+}
+
+.form-field-group input[type="text"],
+.form-field-group input[type="email"],
+.form-field-group select,
+.form-field-group textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-field-group textarea {
+    min-height: 40px; /* Further reduced min-height */
+    resize: vertical;
+}
+
+.checkbox-group {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    align-self: end; /* Align to the bottom of the grid cell */
+    padding-bottom: 10px; /* Match input padding */
+}
+
+.checkbox-group label {
+    margin-bottom: 0;
+    font-weight: bold; /* Make checkbox labels bold */
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 15px; /* Increase checkbox size */
+    height: 15px; /* Increase checkbox size */
+    cursor: pointer;
+}
+
+.customer-form-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.customer-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.customer-search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.customer-search-bar input {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.customer-search-bar button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #1976d2;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .customer-form-grid-layout {
+        grid-template-columns: 1fr; /* Stack fields on smaller screens */
+    }
+    .form-field-group.checkbox-group {
+        align-self: start;
+        padding-bottom: 0;
+    }
 }
